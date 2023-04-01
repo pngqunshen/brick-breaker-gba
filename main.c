@@ -48,20 +48,21 @@ int main(void)
 	drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, 144);
 	drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, 144);
 	// ball
-	drawSprite(BALL, BALL_IND, 120, 80);
+	drawSprite(BALL, BALL_IND, ball_x, ball_y);
 	// brick
-	for (i = 0; i < 13; i++) {
-		drawSprite(BRICK_RED, BRICKS_IND + i, 16*(i+1), 32);
+	for (i = 0; i < 11; i++) {
+		drawSprite(BRICK_RED, BRICKS_IND + i, 16*i + 32, 32);
+		drawSprite(BRICK_RED, BRICKS_IND + 11 + i, 16*i + 32, 40);
 	}
 
     // Set Handler Function for interrupts and enable selected interrupts
     REG_INT = (int)&checkbutton;
-    REG_IE |= INT_TIMER0;	// TODO: complete this line to choose which timer interrupts to enable
+    REG_IE |= INT_TIMER0;	// timer 0
     REG_IME = 0x1;		// Enable interrupt handling
 
     // Set Timer Mode (fill that section and replace TMX with selected timer number)
-    REG_TM0D =	64715;		// TODO: complete this line to set timer initial value
-    REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;		// TODO: complete this line to set timer frequency and enable timer
+    REG_TM0D =	64715;		// 0.05 seconds for each clock cycle
+    REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
 
 	// Infinite loop
 	for(;;);
