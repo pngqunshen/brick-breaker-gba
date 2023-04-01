@@ -1,5 +1,3 @@
-#include "sprites.h"
-#include "buttons.h"
 #define INPUT                      (KEY_MASK & (~REG_KEYS))
 
 void checkbutton(void)

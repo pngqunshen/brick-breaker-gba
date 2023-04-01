@@ -11,10 +11,10 @@
 8. Main/pause menu
 
 ## Sprites
-1. Ball: 0
+1. Ball: 0 - 4
 2. Platform: 5
-3. Bricks: 10 - 19
-4. Life: 25
-5. Powerups: 30 - 34
-6. Wall: 40 - 42
-7. Timer (number): 50 - 59
+3. Bricks: 10 - 59
+4. Life: 60 - 69
+5. Powerups: 65 - 69
+6. Wall: 70 - 109
+7. Timer (number): 110 - 119
