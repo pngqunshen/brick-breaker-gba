@@ -18,3 +18,7 @@
 5. Powerups: 65 - 69
 6. Wall: 70 - 109
 7. Timer (number): 110 - 119
+
+## Timer
+0. 1 second
+1. 0.05 second

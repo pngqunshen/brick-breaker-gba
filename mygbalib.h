@@ -1,5 +1,35 @@
 #define INPUT                      (KEY_MASK & (~REG_KEYS))
 
+void handler(void) 
+{
+    REG_IME = 0x00; // Stop all other interrupt handling, while we handle this current one
+    checkbutton();
+
+    // timer
+    if ((REG_IF & INT_TIMER0) == INT_TIMER0)
+    {
+        if (game_state == GAME_STARTING) { // give a countdown before starting game
+            drawSprite(NUMBER_ZERO + GAME_START_COUNTDOWN - timer, TIMER_IND + 3, 116, 76);
+            timer += 1;
+            if (timer > GAME_START_COUNTDOWN + 1) { // countdown completed
+                timer = 0;
+                game_state = GAME_STARTED;
+                drawSprite(NUMBER_ZERO, TIMER_IND + 3, 240, 160);
+            }
+        } else if (game_state == GAME_STARTED) { // start game normally
+            int ones = timer % 10;
+            int tens = (timer / 10) % 10;
+            int hundreds = (timer / 100) % 10;
+            drawSprite(NUMBER_ZERO + hundreds, TIMER_IND, 0, 0);
+            drawSprite(NUMBER_ZERO + tens, TIMER_IND + 1, 8, 0);
+            drawSprite(NUMBER_ZERO + ones, TIMER_IND + 2, 16, 0);
+            timer += 1;
+        }
+    }
+    REG_IF = REG_IF; // Update interrupt table, to confirm we have handled this interrupt
+    REG_IME = 0x01;  // Re-enable interrupt handling;
+}
+
 void checkbutton(void)
 {
 	// Gift function to show you how a function that can be called upon button interrupt to detect which button was pressed and run a specific function for each button could look like. You would have to define each buttonA/buttonB/... function yourself.
