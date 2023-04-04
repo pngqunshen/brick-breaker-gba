@@ -4,6 +4,9 @@ void handler(void)
 {
     REG_IME = 0x00; // Stop all other interrupt handling, while we handle this current one
     checkbutton();
+    if (game_state == GAME_STARTED) {
+        moveBall();
+    }
 
     // timer
     if ((REG_IF & INT_TIMER0) == INT_TIMER0)
@@ -100,4 +103,70 @@ void drawSprite(int numb, int N, int x, int y)
     *(unsigned short *)(0x7000000 + 8*N) = y | 0x2000;
     *(unsigned short *)(0x7000002 + 8*N) = x | 0x4000;
     *(unsigned short *)(0x7000004 + 8*N) = numb*8;
+}
+
+/*
+  move using Bresenham line algorithm
+*/
+void moveBall(void)
+{
+    int x0 = ball_x;
+    int y0 = ball_y;
+    int x1 = x0 + (int)(BALL_STEP_SIZE*cos(ball_heading));
+    int y1 = y0 + (int)(BALL_STEP_SIZE*sin(ball_heading));
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int error = dx + dy;
+    while (true) {
+        if (checkCollision(x0, y0)) {
+            break;
+        }
+        drawSprite(BALL, BALL_IND, ball_x, ball_y);
+        ball_x = x0;
+        ball_y = y0;
+        if (x0 == x1 && y0 == y1) {
+            break;
+        }
+        int e2 = error*2;
+        if (e2 >= dy) {
+            if (x0 == x1) {
+                break;
+            }
+            error += dy;
+            x0 += sx;
+        }
+        if (e2 <= dx) {
+            if (y0 == y1) {
+                break;
+            }
+            error += dx;
+            y0 += sy;
+        }
+    }
+}
+
+/*
+  Ball is drawn at the center of 16x16 sprite, which means that
+  the offset have to be considered for collision detection
+  +8: to find center of ball
+  +-BALL_RADIUS: to find edge of ball
+*/
+bool checkCollision(int x0, int y0)
+{
+    int ball_top = y0 + 8 - BALL_RADIUS;
+    int ball_bottom = y0 + 8 + BALL_RADIUS;
+    int ball_left = x0 + 8 - BALL_RADIUS;
+    int ball_right = x0 + 8 + BALL_RADIUS;
+    if (ball_right > BALL_RIGHT_BOUND) {
+        return true;
+    }
+    if (ball_left < BALL_LEFT_BOUND) {
+        return true;
+    }
+    if (ball_top < BALL_UPPER_BOUND) {
+        return true;
+    }
+    return false;
 }

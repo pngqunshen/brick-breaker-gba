@@ -1,6 +1,7 @@
 // -----------------------------------------------------------------------------
 // C-Skeleton to be used with HAM Library from www.ngine.de
 // -----------------------------------------------------------------------------
+#include <stdbool.h>
 #include "gba.h"
 #include "spritesMemData.h"
 #include "sprites.h"
