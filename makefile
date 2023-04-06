@@ -4,7 +4,7 @@
 # Created using VisualHAM (www.console-dev.de)
 #
 ##########################################################################################
-HAMDIR = /mnt/c/GBADev
+HAMDIR=C:/GBADev
 include $(HAMDIR)/system/master.mak
 
 #

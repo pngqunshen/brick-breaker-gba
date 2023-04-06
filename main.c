@@ -56,13 +56,14 @@ int main(void)
 	}
 
     // Set Handler Function for interrupts and enable selected interrupts
-    REG_INT = (int)&checkbutton;
-    REG_IE |= INT_TIMER0;	// timer 0
+    REG_INT = (int)&checkbutton | (int)&timer0Interrupt;
+    REG_IE |= INT_TIMER0 | INT_TIMER1;	// timer 0 and 1
     REG_IME = 0x1;		// Enable interrupt handling
 
     // Set Timer Mode (fill that section and replace TMX with selected timer number)
     REG_TM0D =	64715;		// 0.05 seconds for each clock cycle
     REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
+
 
 	// Infinite loop
 	for(;;);
