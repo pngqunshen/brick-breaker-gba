@@ -12,21 +12,23 @@ void handler(void)
     if ((REG_IF & INT_TIMER0) == INT_TIMER0)
     {
         if (game_state == GAME_STARTING) { // give a countdown before starting game
-            drawSprite(NUMBER_ZERO + GAME_START_COUNTDOWN - timer, TIMER_IND + 3, 116, 76);
-            timer += 1;
-            if (timer > GAME_START_COUNTDOWN + 1) { // countdown completed
-                timer = 0;
+            drawSprite(NUMBER_ZERO + GAME_START_COUNTDOWN - GAME_DURATION + timer, 
+                       TIMER_START_IND, 116, 76);
+            timer -= 1;
+            if (GAME_DURATION - timer > GAME_START_COUNTDOWN + 1) { // countdown completed
+                timer = GAME_DURATION;
                 game_state = GAME_STARTED;
-                drawSprite(NUMBER_ZERO, TIMER_IND + 3, 240, 160);
+                drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
             }
         } else if (game_state == GAME_STARTED) { // start game normally
             int ones = timer % 10;
             int tens = (timer / 10) % 10;
             int hundreds = (timer / 100) % 10;
-            drawSprite(NUMBER_ZERO + hundreds, TIMER_IND, 0, 0);
-            drawSprite(NUMBER_ZERO + tens, TIMER_IND + 1, 8, 0);
-            drawSprite(NUMBER_ZERO + ones, TIMER_IND + 2, 16, 0);
-            timer += 1;
+            drawSprite(NUMBER_ZERO + hundreds, TIMER_OVERALL_IND, 0, 0);
+            drawSprite(NUMBER_ZERO + tens, TIMER_OVERALL_IND + 1, 8, 0);
+            drawSprite(NUMBER_ZERO + ones, TIMER_OVERALL_IND + 2, 16, 0);
+            timer -= 1;
+            powerupA_handler();
         }
     }
     REG_IF = REG_IF; // Update interrupt table, to confirm we have handled this interrupt

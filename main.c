@@ -82,5 +82,5 @@ void initialise_level_one(void)
 		drawSprite(BRICK_RED, BRICKS_IND + i, 16*i + 32, 32);
 		drawSprite(BRICK_RED, BRICKS_IND + 11 + i, 16*i + 32, 40);
 	}
-	game_state = 0; // unpause game, begin countdown
+	game_state = GAME_STARTING; // unpause game, begin countdown
 }

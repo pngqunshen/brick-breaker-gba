@@ -9,4 +9,6 @@
 #define LEFT_WALL_IND 70 // first left wall index
 #define RIGHT_WALL_IND 80 // first right wall index
 #define TOP_WALL_IND 90 // first right wall index
-#define TIMER_IND 110 // first timer index
+#define TIMER_OVERALL_IND 110 // first overall timer index
+#define TIMER_START_IND 113 // game start timer index
+#define TIMER_POWERUP_IND 114 // powerup timer index
