@@ -8,15 +8,24 @@
 
 #define BALL_UPPER_BOUND 32 // before hitting upper wall
 #define BALL_LEFT_BOUND 16 // before hitting left wall
-#define BALL_RIGHT_BOUND 224 // before hitting right wall
-#define BALL_STEP_SIZE 2 // pixels to move ball at every interrupt
+#define BALL_RIGHT_BOUND 223 // before hitting right wall
+#define BALL_PLATFORM_BOUND 149 // before hitting platform
+#define BALL_STEP_SIZE 4 // pixels to move ball at every interrupt
 #define BALL_RADIUS 3 // ball radius
 
 #define GAME_DURATION 300 // length of game in seconds
 #define GAME_START_COUNTDOWN 3 // countdown length before starting game
-#define GAME_STARTING 0 // game_state for starting game
-#define GAME_STARTED 1 // game_state for game started
-#define GAME_PAUSED 2 // game_state for game paused
+
+enum GameState
+{
+    /* data */
+    GAME_STARTED, // game_state for game started
+    GAME_STARTING, // game_state for starting game
+    GAME_PAUSED, // game_state for game paused
+    GAME_ENDING, // game_state for game ending
+    GAME_ENDED // game_state for game ended
+};
+
 
 #define M_PI 3.14159265358979323846  // pi
 
@@ -26,16 +35,11 @@ int ball_x = 112; // horizontal position of ball
 int ball_y = 139; // vertical position of ball
 int powerupA_active = 0; // flag to indicate whether the powerup is active or not
 int powerupA_timer = 0;
-int step_size = PLATFORM_STEP_SIZE;
-double ball_heading = -M_PI/2; // heading for ball movement [-pi,pi] increase clockwise
+int step_size = PLATFORM_STEP_SIZE; // step size to move platform
+double ball_heading = -M_PI/4; // heading for ball movement [-pi,pi) increase clockwise
 int timer = GAME_DURATION; // overall timer
 int num_life = 4; // number of life left
-int game_state = GAME_PAUSED; // track status of game
-/*
-  0: game starting
-  1: game started
-  2: game paused
-*/
+enum GameState game_state = GAME_PAUSED; // track status of game
 
 void powerupA_handler() {
 	if (powerupA_active) {

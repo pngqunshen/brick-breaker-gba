@@ -3,9 +3,23 @@
 void handler(void) 
 {
     REG_IME = 0x00; // Stop all other interrupt handling, while we handle this current one
-    checkbutton();
-    if (game_state == GAME_STARTED) {
-        moveBall();
+
+    // handle game state logic
+    if ((REG_IF & INT_TIMER1) == INT_TIMER1)
+    {
+        checkbutton(); // button update
+
+        if (game_state == GAME_STARTED) {
+            moveBall();
+        } else if (game_state == GAME_ENDING) {
+            if (ball_y < 160) {
+                moveBall();
+            } else {
+                game_state = GAME_ENDED;
+            }
+        } else if (game_state == GAME_ENDED) {
+            // game end logic here
+        }
     }
 
     // timer
@@ -20,7 +34,7 @@ void handler(void)
                 game_state = GAME_STARTED;
                 drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
             }
-        } else if (game_state == GAME_STARTED) { // start game normally
+        } else if (game_state == GAME_STARTED || game_state == GAME_ENDING) { // start game normally
             int ones = timer % 10;
             int tens = (timer / 10) % 10;
             int hundreds = (timer / 100) % 10;
@@ -150,6 +164,19 @@ void moveBall(void)
 }
 
 /*
+  ensure angle a is between [-pi, pi)
+*/
+double limit_angle(double a) {
+    if (a >= -M_PI && a<M_PI) {
+        return a;
+    } else if (a < -M_PI) {
+        return limit_angle(a + 2*M_PI);
+    } else {
+        return limit_angle(a - 2*M_PI);
+    }
+}
+
+/*
   Ball is drawn at the center of 16x16 sprite, which means that
   the offset have to be considered for collision detection
   +8: to find center of ball
@@ -157,18 +184,37 @@ void moveBall(void)
 */
 bool checkCollision(int x0, int y0)
 {
-    int ball_top = y0 + 8 - BALL_RADIUS;
-    int ball_bottom = y0 + 8 + BALL_RADIUS;
-    int ball_left = x0 + 8 - BALL_RADIUS;
-    int ball_right = x0 + 8 + BALL_RADIUS;
+    // set ball key pixel index
+    int xc = x0 + 8;
+    int yc = y0 + 8;
+    int ball_top = yc - BALL_RADIUS;
+    int ball_bottom = yc + BALL_RADIUS - 1;
+    int ball_left = xc - BALL_RADIUS;
+    int ball_right = xc + BALL_RADIUS - 1;
+
+    // main boundaries collision
     if (ball_right > BALL_RIGHT_BOUND) {
+        ball_heading = limit_angle(M_PI - ball_heading);
         return true;
     }
     if (ball_left < BALL_LEFT_BOUND) {
+        ball_heading = limit_angle(M_PI - ball_heading);
         return true;
     }
     if (ball_top < BALL_UPPER_BOUND) {
+        ball_heading = limit_angle(-ball_heading);
         return true;
     }
+    if (ball_bottom > BALL_PLATFORM_BOUND) {
+        if ((game_state == GAME_STARTED) && (xc < platform_x + 16) && (xc >= platform_x - 16)) {
+            ball_heading = limit_angle(-ball_heading); // add variable angle
+            return true;
+        } else {
+            game_state = GAME_ENDING;
+        }
+    }
+
+    // bricks collision IMPLEMENT HERE
+
     return false;
 }
