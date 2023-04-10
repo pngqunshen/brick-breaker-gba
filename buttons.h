@@ -5,6 +5,7 @@
 #define PLATFORM_RIGHT_BOUND 208 // before hitting right wall
 #define PLATFORM_STEP_SIZE 4 // pixels to move platform at every interrupt
 #define PLATFORM_HEIGHT 144 // height of platform
+#define PLATFORM_MAX_ANGLE M_PI/6 // maximum additional deflection by hitting end of platform
 
 #define BALL_UPPER_BOUND 32 // before hitting upper wall
 #define BALL_LEFT_BOUND 16 // before hitting left wall
@@ -36,7 +37,7 @@ int ball_y = 139; // vertical position of ball
 int powerupA_active = 0; // flag to indicate whether the powerup is active or not
 int powerupA_timer = 0;
 int step_size = PLATFORM_STEP_SIZE; // step size to move platform
-double ball_heading = -M_PI/4; // heading for ball movement [-pi,pi) increase clockwise
+double ball_heading = -M_PI/2; // heading for ball movement [-pi,pi) increase clockwise
 int timer = GAME_DURATION; // overall timer
 int num_life = 4; // number of life left
 enum GameState game_state = GAME_PAUSED; // track status of game
