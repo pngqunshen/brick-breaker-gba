@@ -1,46 +1,6 @@
 /////////////////////////////////////////////////
 // functions that handles what each button does
 /////////////////////////////////////////////////
-#define PLATFORM_LEFT_BOUND 32 // before hitting left wall
-#define PLATFORM_RIGHT_BOUND 208 // before hitting right wall
-#define PLATFORM_STEP_SIZE 4 // pixels to move platform at every interrupt
-#define PLATFORM_HEIGHT 144 // height of platform
-#define PLATFORM_MAX_ANGLE M_PI/6 // maximum additional deflection by hitting end of platform
-
-#define BALL_UPPER_BOUND 32 // before hitting upper wall
-#define BALL_LEFT_BOUND 16 // before hitting left wall
-#define BALL_RIGHT_BOUND 223 // before hitting right wall
-#define BALL_PLATFORM_BOUND 149 // before hitting platform
-#define BALL_STEP_SIZE 4 // pixels to move ball at every interrupt
-#define BALL_RADIUS 3 // ball radius
-
-#define GAME_DURATION 300 // length of game in seconds
-#define GAME_START_COUNTDOWN 3 // countdown length before starting game
-
-enum GameState
-{
-    /* data */
-    GAME_STARTED, // game_state for game started
-    GAME_STARTING, // game_state for starting game
-    GAME_PAUSED, // game_state for game paused
-    GAME_ENDING, // game_state for game ending
-    GAME_ENDED // game_state for game ended
-};
-
-
-#define M_PI 3.14159265358979323846  // pi
-
-// global variables
-int platform_x = 120; // position of platform
-int ball_x = 112; // horizontal position of ball
-int ball_y = 139; // vertical position of ball
-int powerupA_active = 0; // flag to indicate whether the powerup is active or not
-int powerupA_timer = 0;
-int step_size = PLATFORM_STEP_SIZE; // step size to move platform
-double ball_heading = -M_PI/2; // heading for ball movement [-pi,pi) increase clockwise
-int timer = GAME_DURATION; // overall timer
-int num_life = 4; // number of life left
-enum GameState game_state = GAME_PAUSED; // track status of game
 
 void powerupA_handler() {
 	if (powerupA_active) {
@@ -61,40 +21,92 @@ void buttonA() {
 }
 void buttonB() {}
 void buttonSel() {}
-void buttonS() {}
-void buttonR() {
-    if (platform_x <= PLATFORM_RIGHT_BOUND - step_size) {
-        platform_x += step_size;
-        drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
-        drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
-        if (game_state == GAME_STARTING) {
-            ball_x += PLATFORM_STEP_SIZE;
-            drawSprite(BALL, BALL_IND, ball_x, ball_y);
-        }
+void buttonS() {
+    if (game_state == GAME_PAUSED && pause_timer <= 0) {
+        game_state = GAME_STARTING;
+        pause_timer = GAME_PAUSE_COOLDOWN;
+        start_timer = GAME_START_COUNTDOWN;
+    } else if ((game_state == GAME_STARTING || game_state == GAME_STARTED) && pause_timer <= 0) {
+        pause_timer = GAME_PAUSE_COOLDOWN;
+        game_state = GAME_PAUSED;
     }
-    //if (powerupA_time > 0) { // Check if powerup is active
-    //    powerupA_time--; // Decrement powerup time
-    //    if (powerupA_time == 0) { // Check if powerup has expired
-    //        step_size /= 2; // Restore platform speed to normal
-    //    }
-    //}
+}
+void buttonR() {
+    if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
+        if (platform_x <= PLATFORM_RIGHT_BOUND - step_size) {
+            platform_x += step_size;
+            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
+            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
+            if (game_state == GAME_STARTING) {
+                ball_x += PLATFORM_STEP_SIZE;
+                drawSprite(BALL, BALL_IND, ball_x, ball_y);
+            }
+        }
+        //if (powerupA_time > 0) { // Check if powerup is active
+        //    powerupA_time--; // Decrement powerup time
+        //    if (powerupA_time == 0) { // Check if powerup has expired
+        //        step_size /= 2; // Restore platform speed to normal
+        //    }
+        //}
+    }
 }
 void buttonL() {
-    if (platform_x >= PLATFORM_LEFT_BOUND + step_size) {
-        platform_x -= step_size;
-        drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
-        drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
-        if (game_state == GAME_STARTING) {
-            ball_x -= PLATFORM_STEP_SIZE;
-            drawSprite(BALL, BALL_IND, ball_x, ball_y);
+    if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
+        if (platform_x >= PLATFORM_LEFT_BOUND + step_size) {
+            platform_x -= step_size;
+            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
+            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
+            if (game_state == GAME_STARTING) {
+                ball_x -= PLATFORM_STEP_SIZE;
+                drawSprite(BALL, BALL_IND, ball_x, ball_y);
+            }
         }
+        //if (powerupA_time > 0) {
+        //    powerupA_time--;
+        //    if (powerupA_time == 0) {
+        //        step_size /= 2;
+        //    }
+        //}
     }
-    //if (powerupA_time > 0) {
-    //    powerupA_time--;
-    //    if (powerupA_time == 0) {
-    //        step_size /= 2;
-    //    }
-    //}
 }
 void buttonU() {}
 void buttonD() {}
+
+void checkbutton(void)
+{
+	// Gift function to show you how a function that can be called upon button interrupt to detect which button was pressed and run a specific function for each button could look like. You would have to define each buttonA/buttonB/... function yourself.
+    u16 buttons = INPUT;
+    
+    if ((buttons & KEY_A) == KEY_A)
+    {
+        buttonA();
+    }
+    if ((buttons & KEY_B) == KEY_B)
+    {
+        buttonB();
+    }
+    if ((buttons & KEY_SELECT) == KEY_SELECT)
+    {
+        buttonSel();
+    }
+    if ((buttons & KEY_START) == KEY_START)
+    {
+        buttonS();
+    }
+    if ((buttons & KEY_RIGHT) == KEY_RIGHT)
+    {
+        buttonR();
+    }
+    if ((buttons & KEY_LEFT) == KEY_LEFT)
+    {
+        buttonL();
+    }
+    if ((buttons & KEY_UP) == KEY_UP)
+    {
+        buttonU();
+    }
+    if ((buttons & KEY_DOWN) == KEY_DOWN)
+    {
+        buttonD();
+    }
+}

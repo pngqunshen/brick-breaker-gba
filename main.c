@@ -3,7 +3,7 @@
 // -----------------------------------------------------------------------------
 #include <stdbool.h>
 #include "gba.h"
-#include "spritesMemData.h"
+#include "config.h"
 #include "sprites.h"
 #include "buttons.h"
 #include "mygbalib.h"
@@ -52,10 +52,10 @@ int main(void)
     // Set Handler Function for interrupts and enable selected interrupts
     REG_INT = (int)&handler;
     REG_IE |= INT_TIMER0;	// timer 0, 1 second interval
-    REG_IE |= INT_TIMER1;	// timer 0, 0.05 second interval
+    REG_IE |= INT_TIMER1;	// timer 1, 0.05 second interval
     REG_IME = 0x1;		// Enable interrupt handling
 
-    // Set Timer Mode (fill that section and replace TMX with selected timer number)
+    // Set Timer Mode
     REG_TM0D =	49148;		// 1 seconds for each clock cycle
     REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
     REG_TM1D =	64715;		// 0.05 seconds for each clock cycle

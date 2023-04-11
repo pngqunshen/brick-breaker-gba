@@ -8,33 +8,64 @@ void handler(void)
     if ((REG_IF & INT_TIMER1) == INT_TIMER1)
     {
         checkbutton(); // button update
-
-        if (game_state == GAME_STARTED) {
-            moveBall();
-        } else if (game_state == GAME_ENDING) {
-            if (ball_y < 160) {
+        
+        switch (game_state)
+        {
+            case GAME_STARTED:
                 moveBall();
-            } else {
-                game_state = GAME_ENDED;
+                break;
+
+            case GAME_ENDING:
+                if (ball_y < 160) {
+                    moveBall();
+                } else {
+                    game_state = GAME_ENDED;
+                }
+                break;
+
+            case GAME_PAUSED: {
+                drawSprite(LETTER_P, GAME_MESSAGE_IND, 96, 72);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 104, 72);
+                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 112, 72);
+                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 120, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 128, 72);
+                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 136, 72);
+                break;
             }
-        } else if (game_state == GAME_ENDED) {
-            // game end logic here
+
+            case GAME_STARTING: {
+                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
+                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
+                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
+                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+                break;
+            }
+            
+            default:
+                break;
         }
     }
 
     // timer
     if ((REG_IF & INT_TIMER0) == INT_TIMER0)
     {
-        if (game_state == GAME_STARTING) { // give a countdown before starting game
-            drawSprite(NUMBER_ZERO + GAME_START_COUNTDOWN - GAME_DURATION + timer, 
-                       TIMER_START_IND, 116, 76);
-            timer -= 1;
-            if (GAME_DURATION - timer > GAME_START_COUNTDOWN + 1) { // countdown completed
-                timer = GAME_DURATION;
+        switch (game_state)
+        {
+        case GAME_STARTING: {
+            drawSprite(NUMBER_ZERO + start_timer, TIMER_START_IND, 116, 76);
+            if (start_timer <= 0) { // countdown completed
                 game_state = GAME_STARTED;
                 drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
             }
-        } else if (game_state == GAME_STARTED || game_state == GAME_ENDING) { // start game normally
+            start_timer -= 1;
+            pause_timer -= 1;
+            break;
+        }
+
+        case GAME_STARTED:
+        case GAME_ENDING: {
             int ones = timer % 10;
             int tens = (timer / 10) % 10;
             int hundreds = (timer / 100) % 10;
@@ -43,51 +74,21 @@ void handler(void)
             drawSprite(NUMBER_ZERO + ones, TIMER_OVERALL_IND + 2, 16, 0);
             timer -= 1;
             powerupA_handler();
+            break;
+        }
+        
+        case GAME_PAUSED: {
+            pause_timer -= 1;
+            break;
+        }
+        
+        default:
+            break;
         }
     }
     REG_IF = REG_IF; // Update interrupt table, to confirm we have handled this interrupt
     REG_IME = 0x01;  // Re-enable interrupt handling;
 }
-
-void checkbutton(void)
-{
-	// Gift function to show you how a function that can be called upon button interrupt to detect which button was pressed and run a specific function for each button could look like. You would have to define each buttonA/buttonB/... function yourself.
-    u16 buttons = INPUT;
-    
-    if ((buttons & KEY_A) == KEY_A)
-    {
-        buttonA();
-    }
-    if ((buttons & KEY_B) == KEY_B)
-    {
-        buttonB();
-    }
-    if ((buttons & KEY_SELECT) == KEY_SELECT)
-    {
-        buttonSel();
-    }
-    if ((buttons & KEY_START) == KEY_START)
-    {
-        buttonS();
-    }
-    if ((buttons & KEY_RIGHT) == KEY_RIGHT)
-    {
-        buttonR();
-    }
-    if ((buttons & KEY_LEFT) == KEY_LEFT)
-    {
-        buttonL();
-    }
-    if ((buttons & KEY_UP) == KEY_UP)
-    {
-        buttonU();
-    }
-    if ((buttons & KEY_DOWN) == KEY_DOWN)
-    {
-        buttonD();
-    }
-}
-
 
 void fillPalette(void)
 {
