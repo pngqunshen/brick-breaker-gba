@@ -87,22 +87,78 @@ bool checkCollision(int x0, int y0)
         if ((game_state == GAME_STARTED) && (xc < platform_x + 16) && (xc >= platform_x - 16)) {
             double ang_extra = (xc - platform_x + 0.5) / 15.5 * PLATFORM_MAX_ANGLE;
             double reflection = limit_angle(-ball_heading + ang_extra);
-            if (reflection < 0) {
-                ball_heading = reflection;
-            } else if (reflection > M_PI/2) {
-                ball_heading = -M_PI+0.1;
+            if ((reflection < -M_PI + M_PI/9) || (reflection > M_PI/2)) {
+                ball_heading = -M_PI + M_PI/9; // offset slightly so it is not horizontal
+            } else if (reflection > -M_PI/9) {
+                ball_heading = -M_PI/9; // offset slightly so it is not horizontal
             } else {
-                ball_heading = -0.1;
+                ball_heading = reflection;
             }
             return true;
         } else {
             game_state = GAME_ENDING;
         }
     }
-
+    
     // bricks collision IMPLEMENT HERE
-
+    // int row = sizeof(brick_hp); //hori_edges is an array that contains y-values of top and bottom edges of bricks (top,bttom,top,bottom...)
+    // int col = sizeof(brick_hp[0]); //verti_edges contains x-values of left edges of bricks (left,right,left,right....)
+    // for (int i = 0; i < row; i++) {
+    //     if (hori_edges[i*2] == ball_bottom || hori_edges[i*2+1] == ball_top) { //check if ball_bottom coincides with any top edges in y-coord || top with bottom edges (confirm when ball clips in brick)
+    //         brick_col   = (xc- leftmargin)/16 //to find out which column of bricks ball cooincides with
+    //         if (brick_col < col) { //if brick col > (number of bricks) nothing happens
+    //             if (brick_hp[i][brick_col] > 0) { //brick_hp is global array matrix of the hp of all brick
+    //                 if ((i%2 0) == 0) { //check if it is top edge or bottom edge
+    //                     ball_heading = M_PI - ball_heading //reflect upwards
+    //                 } else {
+    //                     ball_heading = -M_PI - ball_heading // reflect down
+    //                 }
+    //                 brick_hp[i][brick_col] -= 1
+    //             }    
+    //         }
+    //     }    
+    // }
+    // for (int i = 0; i < col; i++) {
+    //     if (verti_edges[i*2] == ball_right ||verti_edges[i*2+1] == ball_left) { //check if ball_right coincides with any left edges in x-coord || left with right edges
+    //         brick_row = (yc- topmargin)/8 //to find out which row of bricks ball cooincides with
+    //         if (brick_row > (row)) { //if brick row > (number of bricks) nothing happens
+    //             if (brick_hp[brick_row][i] > 0) { //brick_hp is global array matrix of the hp of all brick
+    //                 ball_heading = -ball_heading //reflect upwards
+    //                 brick_hp[brick_row][i] -=1
+    //             }
+    //         }    
+    //     }    
+    // }
     return false;
+}
+
+void powerupA_handler() {
+	if (powerupA_active) {
+        int ones = powerupA_timer % 10;
+        int tens = (powerupA_timer / 10) % 10;
+        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_IND, 56, 0);
+        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_IND + 1, 48, 0);
+		powerupA_timer--;
+		drawSprite(POWERUP_A, POWERUP_IND, 32, 0);
+		if (powerupA_timer <= 0) {
+			step_size /= 2; // revert platform step size
+			powerupA_active = false;
+			powerupA_cooldown = POWERUP_A_COOLDOWN_DURATION; // set cooldown
+            drawSprite(NUMBER_ZERO, TIMER_POWERUP_IND, 240, 120);
+            drawSprite(NUMBER_ZERO, TIMER_POWERUP_IND+1, 240, 120);
+            drawSprite(POWERUP_A, POWERUP_IND, 240, 120);
+		}
+	} else if (powerupA_cooldown > 0) {
+        int ones = powerupA_cooldown % 10;
+        int tens = (powerupA_cooldown / 10) % 10;
+        drawSprite(NUMBER_ZERO + ones, TIMER_COOLDOWN_IND, 56, 0);
+        drawSprite(NUMBER_ZERO + tens, TIMER_COOLDOWN_IND + 1, 48, 0);
+        powerupA_cooldown--;
+        if (powerupA_cooldown <= 0) {
+            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_IND, 240, 120);
+            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_IND+1, 240, 120);
+        }
+	}
 }
 
 /*

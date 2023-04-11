@@ -11,7 +11,8 @@
 #define TIMER_OVERALL_IND 110 // first overall timer index
 #define TIMER_START_IND 113 // game start timer index
 #define TIMER_POWERUP_IND 114 // powerup timer index
-#define GAME_MESSAGE_IND 116 // game message index
+#define TIMER_COOLDOWN_IND 116 // cooldown timer index
+#define GAME_MESSAGE_IND 118 // game message index
 
 // platform config
 #define PLATFORM_LEFT_BOUND 32 // before hitting left wall
@@ -30,6 +31,10 @@
 #define BALL_START_X 112 // start x position of ball
 #define BALL_START_Y 90 // start y position of ball
 #define BALL_START_HEAD M_PI/2 // start heading of ball
+
+// powerup config
+#define POWERUP_A_DURATION 10 // duration of powerup A
+#define POWERUP_A_COOLDOWN_DURATION 30 // cooldown time for powerup A
 
 // game config
 #define GAME_DURATION 300 // length of game in seconds
@@ -62,8 +67,9 @@ int ball_y = BALL_START_Y; // vertical position of ball
 double ball_heading = BALL_START_HEAD; // heading for ball movement [-pi,pi) increase clockwise
 
 // powerups
-int powerupA_active = 0; // flag to indicate whether the powerup is active or not
-int powerupA_timer = 0;
+bool powerupA_active = false; // flag to indicate whether the powerup is active or not
+int powerupA_timer = 0; // timer for powerupA duration
+int powerupA_cooldown = 0; // timer for powerupA cooldown
 int step_size = PLATFORM_STEP_SIZE; // step size to move platform
 
 // timer

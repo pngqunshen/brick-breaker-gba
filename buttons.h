@@ -4,23 +4,18 @@
 
 #define INPUT                      (KEY_MASK & (~REG_KEYS))
 
-void powerupA_handler() {
-	if (powerupA_active) {
-		powerupA_timer--;
-		if (powerupA_timer == 0) {
-			step_size /= 2; // revert platform step size
-			powerupA_active = 0;
-		}
+void buttonA() {
+	if (powerupA_cooldown > 0) {
+		// Powerup is on cooldown, do nothing
+		return;
+	}
+	if (!powerupA_active) {
+		powerupA_active = true;
+		step_size *= 2;
+		powerupA_timer = POWERUP_A_DURATION; // set powerup timer
 	}
 }
 
-void buttonA() {
-	if (!powerupA_active) {
-		powerupA_active = 1;
-		step_size *= 2;
-		powerupA_timer = 10; // set timer to 10 seconds
-	}
-}
 void buttonB() {}
 void buttonSel() {}
 void buttonS() {
@@ -44,12 +39,6 @@ void buttonR() {
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
             }
         }
-        //if (powerupA_time > 0) { // Check if powerup is active
-        //    powerupA_time--; // Decrement powerup time
-        //    if (powerupA_time == 0) { // Check if powerup has expired
-        //        step_size /= 2; // Restore platform speed to normal
-        //    }
-        //}
     }
 }
 void buttonL() {
@@ -63,12 +52,6 @@ void buttonL() {
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
             }
         }
-        //if (powerupA_time > 0) {
-        //    powerupA_time--;
-        //    if (powerupA_time == 0) {
-        //        step_size /= 2;
-        //    }
-        //}
     }
 }
 void buttonU() {}

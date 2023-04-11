@@ -56,3 +56,5 @@ dkms.conf
 *.gba
 main.s
 makefile
+
+.vscode
