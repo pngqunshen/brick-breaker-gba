@@ -12,3 +12,4 @@
 #define TIMER_OVERALL_IND 110 // first overall timer index
 #define TIMER_START_IND 113 // game start timer index
 #define TIMER_POWERUP_IND 114 // powerup timer index
+#define TIMER_COOLDOWN_IND 115 // cooldown timer index

@@ -121,47 +121,6 @@ void drawSprite(int numb, int N, int x, int y)
     *(unsigned short *)(0x7000004 + 8*N) = numb*8;
 }
 
-/*
-  move using Bresenham line algorithm
-*/
-void moveBall(void)
-{
-    int x0 = ball_x;
-    int y0 = ball_y;
-    int x1 = x0 + (int)(BALL_STEP_SIZE*cos(ball_heading));
-    int y1 = y0 + (int)(BALL_STEP_SIZE*sin(ball_heading));
-    int dx = abs(x1 - x0);
-    int sx = x0 < x1 ? 1 : -1;
-    int dy = -abs(y1 - y0);
-    int sy = y0 < y1 ? 1 : -1;
-    int error = dx + dy;
-    while (true) {
-        if (checkCollision(x0, y0)) {
-            break;
-        }
-        drawSprite(BALL, BALL_IND, ball_x, ball_y);
-        ball_x = x0;
-        ball_y = y0;
-        if (x0 == x1 && y0 == y1) {
-            break;
-        }
-        int e2 = error*2;
-        if (e2 >= dy) {
-            if (x0 == x1) {
-                break;
-            }
-            error += dy;
-            x0 += sx;
-        }
-        if (e2 <= dx) {
-            if (y0 == y1) {
-                break;
-            }
-            error += dx;
-            y0 += sy;
-        }
-    }
-}
 
 /*
   ensure angle a is between [-pi, pi)
@@ -228,3 +187,46 @@ bool checkCollision(int x0, int y0)
 
     return false;
 }
+
+/*
+  move using Bresenham line algorithm
+*/
+void moveBall(void)
+{
+    int x0 = ball_x;
+    int y0 = ball_y;
+    int x1 = x0 + (int)(BALL_STEP_SIZE*cos(ball_heading));
+    int y1 = y0 + (int)(BALL_STEP_SIZE*sin(ball_heading));
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = -abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int error = dx + dy;
+    while (true) {
+        if (checkCollision(x0, y0)) {
+            break;
+        }
+        drawSprite(BALL, BALL_IND, ball_x, ball_y);
+        ball_x = x0;
+        ball_y = y0;
+        if (x0 == x1 && y0 == y1) {
+            break;
+        }
+        int e2 = error*2;
+        if (e2 >= dy) {
+            if (x0 == x1) {
+                break;
+            }
+            error += dy;
+            x0 += sx;
+        }
+        if (e2 <= dx) {
+            if (y0 == y1) {
+                break;
+            }
+            error += dx;
+            y0 += sy;
+        }
+    }
+}
+

@@ -35,30 +35,50 @@ int platform_x = 120; // position of platform
 int ball_x = 112; // horizontal position of ball
 int ball_y = 139; // vertical position of ball
 int powerupA_active = 0; // flag to indicate whether the powerup is active or not
-int powerupA_timer = 0;
+int powerupA_timer = 0; //timer for powerupA duration
+int powerupA_cooldown = 0; //timer for powerupA cooldown
 int step_size = PLATFORM_STEP_SIZE; // step size to move platform
 double ball_heading = -M_PI/2; // heading for ball movement [-pi,pi) increase clockwise
 int timer = GAME_DURATION; // overall timer
-int num_life = 4; // number of life left
+int num_life = 4; // number of life left 
 enum GameState game_state = GAME_PAUSED; // track status of game
 
 void powerupA_handler() {
-	if (powerupA_active) {
+	if (powerupA_active && powerupA_cooldown == 0) {
+		int ones = powerupA_timer % 10;
+      int tens = (powerupA_timer / 10) % 10;
+		drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_IND, 224-16, 16);
+      drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_IND + 1, 224-24, 16)
 		powerupA_timer--;
+		drawSprite(POWERUP_A,POWERUP_IND,224,16);
 		if (powerupA_timer == 0) {
 			step_size /= 2; // revert platform step size
 			powerupA_active = 0;
+			powerupA_cooldown = 30; // set cooldown to 30 seconds
 		}
+	} else if (powerupA_cooldown > 0) {
+		int ones = powerupA_cooldown % 10;
+      int tens = (powerupA_cooldown / 10) % 10;
+		drawSprite(NUMBER_ZERO + ones, TIMER_COOLDOWN_IND, 224-16, 16);
+      drawSprite(NUMBER_ZERO + tens, TIMER_COOLDOWN_IND + 1, 224-24, 16);
+		powerupA_cooldown--;
 	}
 }
 
+
+
 void buttonA() {
+	if (powerupA_cooldown > 0) {
+		// Powerup is on cooldown, do nothing
+		return;
+	}
 	if (!powerupA_active) {
 		powerupA_active = 1;
 		step_size *= 2;
 		powerupA_timer = 10; // set timer to 10 seconds
 	}
 }
+
 void buttonB() {}
 void buttonSel() {}
 void buttonS() {}
@@ -72,12 +92,6 @@ void buttonR() {
             drawSprite(BALL, BALL_IND, ball_x, ball_y);
         }
     }
-    //if (powerupA_time > 0) { // Check if powerup is active
-    //    powerupA_time--; // Decrement powerup time
-    //    if (powerupA_time == 0) { // Check if powerup has expired
-    //        step_size /= 2; // Restore platform speed to normal
-    //    }
-    //}
 }
 void buttonL() {
     if (platform_x >= PLATFORM_LEFT_BOUND + step_size) {
@@ -89,12 +103,6 @@ void buttonL() {
             drawSprite(BALL, BALL_IND, ball_x, ball_y);
         }
     }
-    //if (powerupA_time > 0) {
-    //    powerupA_time--;
-    //    if (powerupA_time == 0) {
-    //        step_size /= 2;
-    //    }
-    //}
 }
 void buttonU() {}
 void buttonD() {}
