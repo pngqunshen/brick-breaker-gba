@@ -2,6 +2,8 @@
 // functions that handles what each button does
 /////////////////////////////////////////////////
 
+#define INPUT                      (KEY_MASK & (~REG_KEYS))
+
 void powerupA_handler() {
 	if (powerupA_active) {
 		powerupA_timer--;

@@ -27,11 +27,15 @@
 #define BALL_PLATFORM_BOUND 149 // before hitting platform
 #define BALL_STEP_SIZE 4 // pixels to move ball at every interrupt
 #define BALL_RADIUS 3 // ball radius
+#define BALL_START_X 112 // start x position of ball
+#define BALL_START_Y 90 // start y position of ball
+#define BALL_START_HEAD M_PI/2 // start heading of ball
 
 // game config
 #define GAME_DURATION 300 // length of game in seconds
 #define GAME_START_COUNTDOWN 3 // countdown length before starting game
 #define GAME_PAUSE_COOLDOWN 2 // cooldown time when pause initiated
+#define MAX_NUM_LIFE 4 // cooldown time when pause initiated
 
 enum GameState
 {
@@ -40,7 +44,8 @@ enum GameState
     GAME_STARTING, // game_state for starting game
     GAME_PAUSED, // game_state for game paused
     GAME_ENDING, // game_state for game ending
-    GAME_ENDED // game_state for game ended
+    GAME_ENDED, // game_state for game ended
+    GAME_OVER // game_state for game over
 };
 
 
@@ -52,9 +57,9 @@ enum GameState
 
 // game coordinates
 int platform_x = 120; // position of platform
-int ball_x = 112; // horizontal position of ball
-int ball_y = 139; // vertical position of ball
-double ball_heading = -M_PI/2; // heading for ball movement [-pi,pi) increase clockwise
+int ball_x = BALL_START_X; // horizontal position of ball
+int ball_y = BALL_START_Y; // vertical position of ball
+double ball_heading = BALL_START_HEAD; // heading for ball movement [-pi,pi) increase clockwise
 
 // powerups
 int powerupA_active = 0; // flag to indicate whether the powerup is active or not
@@ -67,5 +72,5 @@ int pause_timer = GAME_PAUSE_COOLDOWN; // time taken before game can unpause
 int start_timer = GAME_START_COUNTDOWN; // time taken before game starts
 
 // other game states
-int num_life = 4; // number of life left
+int num_life = MAX_NUM_LIFE; // number of life left
 enum GameState game_state = GAME_PAUSED; // track status of game

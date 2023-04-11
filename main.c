@@ -2,15 +2,140 @@
 // C-Skeleton to be used with HAM Library from www.ngine.de
 // -----------------------------------------------------------------------------
 #include <stdbool.h>
+#include <stdlib.h>
+#include <math.h>
 #include "gba.h"
 #include "config.h"
 #include "sprites.h"
-#include "buttons.h"
 #include "mygbalib.h"
+#include "buttons.h"
+#include "levels.h"
 
 // -----------------------------------------------------------------------------
 // Project Entry Point
 // -----------------------------------------------------------------------------
+
+void handler(void) 
+{
+    REG_IME = 0x00; // Stop all other interrupt handling, while we handle this current one
+
+    // handle game state logic
+    if ((REG_IF & INT_TIMER1) == INT_TIMER1)
+    {
+        checkbutton(); // button update
+        
+        switch (game_state)
+        {
+            case GAME_STARTED:
+                moveBall();
+                break;
+
+            case GAME_ENDING:
+                if (ball_y < 160) {
+                    moveBall();
+                } else {
+                    game_state = GAME_ENDED;
+                }
+                break;
+
+            case GAME_PAUSED: {
+                drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
+                drawSprite(LETTER_P, GAME_MESSAGE_IND, 96, 72);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 104, 72);
+                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 112, 72);
+                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 120, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 128, 72);
+                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 136, 72);
+                break;
+            }
+
+            case GAME_STARTING: {
+                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
+                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
+                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
+                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+                break;
+            }
+
+            case GAME_ENDED: {
+                if (num_life > 0) {
+                    num_life -= 1;
+                    drawHeart();
+                    ball_x = BALL_START_X;
+                    ball_y = BALL_START_Y;
+                    ball_heading = BALL_START_HEAD;
+                    drawSprite(BALL, BALL_IND, ball_x, ball_y);
+                    start_timer = GAME_START_COUNTDOWN;
+                    game_state = GAME_STARTING;
+                } else {
+					game_state = GAME_OVER;
+				}
+				break;
+            }
+
+			case GAME_OVER: {
+				drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+				drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
+				drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
+				drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
+				drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+			}
+            
+            default:
+                break;
+        }
+    }
+
+    // timer
+    if ((REG_IF & INT_TIMER0) == INT_TIMER0)
+    {
+        switch (game_state)
+        {
+        case GAME_STARTING: {
+            drawSprite(NUMBER_ZERO + start_timer, TIMER_START_IND, 116, 76);
+            if (start_timer <= 0) { // countdown completed
+                game_state = GAME_STARTED;
+                drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
+            }
+            start_timer -= 1;
+            pause_timer -= 1;
+            break;
+        }
+
+        case GAME_STARTED:
+        case GAME_ENDING: {
+            int ones = timer % 10;
+            int tens = (timer / 10) % 10;
+            int hundreds = (timer / 100) % 10;
+            drawSprite(NUMBER_ZERO + hundreds, TIMER_OVERALL_IND, 0, 0);
+            drawSprite(NUMBER_ZERO + tens, TIMER_OVERALL_IND + 1, 8, 0);
+            drawSprite(NUMBER_ZERO + ones, TIMER_OVERALL_IND + 2, 16, 0);
+            timer -= 1;
+            powerupA_handler();
+			if (timer < 0) {
+				game_state = GAME_OVER;
+			}
+            break;
+        }
+        
+        case GAME_PAUSED: {
+            pause_timer -= 1;
+            break;
+        }
+        
+        default:
+            break;
+        }
+    }
+    REG_IF = REG_IF; // Update interrupt table, to confirm we have handled this interrupt
+    REG_IME = 0x01;  // Re-enable interrupt handling;
+}
+
 int main(void)
 {
 	//////////////////////These stuff probably can remove //////////////////////
@@ -45,9 +170,7 @@ int main(void)
 		drawSprite(TOP_WALL, TOP_WALL_IND + i, 16*i, 16);
 	}
 	// hearts
-	for (i = 0; i < num_life; i++) {
-		drawSprite(HEART, LIFE_IND + i, 224 - 16*i, 0);
-	}
+	drawHeart();
 
     // Set Handler Function for interrupts and enable selected interrupts
     REG_INT = (int)&handler;
@@ -67,20 +190,4 @@ int main(void)
 	for(;;);
 	
 	return 0;
-}
-
-void initialise_level_one(void) 
-{
-	int i; // general loop variable
-	// platform
-	drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, 144);
-	drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, 144);
-	// ball
-	drawSprite(BALL, BALL_IND, ball_x, ball_y);
-	// brick
-	for (i = 0; i < 11; i++) {
-		drawSprite(BRICK_RED, BRICKS_IND + i, 16*i + 32, 32);
-		drawSprite(BRICK_RED, BRICKS_IND + 11 + i, 16*i + 32, 40);
-	}
-	game_state = GAME_STARTING; // unpause game, begin countdown
 }
