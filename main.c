@@ -60,7 +60,7 @@ void handler(void)
             }
 
             case GAME_ENDED: {
-                if (num_life > 0) {
+                if (num_life > 1) {
                     num_life -= 1;
                     drawHeart();
                     ball_x = BALL_START_X;
@@ -70,6 +70,8 @@ void handler(void)
                     start_timer = GAME_START_COUNTDOWN;
                     game_state = GAME_STARTING;
                 } else {
+                    num_life -= 1;
+                    drawHeart();
 					game_state = GAME_OVER;
 				}
 				break;
