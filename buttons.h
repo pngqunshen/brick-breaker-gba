@@ -19,15 +19,41 @@ void buttonA() {
 void buttonB() {}
 void buttonSel() {}
 void buttonS() {
-    if (game_state == GAME_PAUSED && pause_timer <= 0) {
+    switch (game_state)
+    {
+    case GAME_PAUSED: {
+        if (pause_timer <= 0) {
+            game_state = GAME_STARTING;
+            pause_timer = GAME_PAUSE_COOLDOWN;
+            start_timer = GAME_START_COUNTDOWN;
+        }
+        break;
+    }
+
+    case GAME_STARTING:
+    case GAME_STARTED: {
+        if (pause_timer <= 0) {
+            pause_timer = GAME_PAUSE_COOLDOWN;
+            game_state = GAME_PAUSED;
+        }
+        break;
+    }
+
+    case GAME_MENU: {
+        int i;
+        for (i = 0; i<60; i++) {
+            drawSprite(0,i,240,160);
+        }
         game_state = GAME_STARTING;
-        pause_timer = GAME_PAUSE_COOLDOWN;
-        start_timer = GAME_START_COUNTDOWN;
-    } else if ((game_state == GAME_STARTING || game_state == GAME_STARTED) && pause_timer <= 0) {
-        pause_timer = GAME_PAUSE_COOLDOWN;
-        game_state = GAME_PAUSED;
+        initialiseLevelOne();
+        break;
+    }
+    
+    default:
+        break;
     }
 }
+
 void buttonR() {
     if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
         if (platform_x <= PLATFORM_RIGHT_BOUND - step_size) {

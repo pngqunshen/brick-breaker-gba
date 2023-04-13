@@ -13,6 +13,7 @@
 #define TIMER_POWERUP_IND 114 // powerup timer index
 #define TIMER_COOLDOWN_IND 116 // cooldown timer index
 #define GAME_MESSAGE_IND 118 // game message index
+#define START_GAME_MESSAGE_IND 0 // start game message index, overwrites ball index
 
 // platform config
 #define PLATFORM_LEFT_BOUND 32 // before hitting left wall
@@ -52,6 +53,7 @@
 enum GameState
 {
     /* data */
+    GAME_MENU, // game_state for start menu
     GAME_STARTED, // game_state for game started
     GAME_STARTING, // game_state for starting game
     GAME_PAUSED, // game_state for game paused
@@ -86,7 +88,8 @@ int start_timer = GAME_START_COUNTDOWN; // time taken before game starts
 
 // other game states
 int num_life = MAX_NUM_LIFE; // number of life left
-enum GameState game_state = GAME_PAUSED; // track status of game
+enum GameState game_state = GAME_MENU; // track status of game
+bool main_menu_flash = true; // flash the press start message
 
 // bricks
 int bricks[BRICK_MAX_NUM][2]; // position of brick

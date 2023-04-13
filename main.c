@@ -26,6 +26,10 @@ void handler(void)
         
         switch (game_state)
         {
+            case GAME_MENU:
+                mainMenu();
+                break;
+
             case GAME_STARTED:
                 moveBall();
                 break;
@@ -86,6 +90,7 @@ void handler(void)
 				drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
 				drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
 				drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+                break;
 			}
             
             default:
@@ -98,6 +103,11 @@ void handler(void)
     {
         switch (game_state)
         {
+        case GAME_MENU: {
+            main_menu_flash = !main_menu_flash;
+            break;
+        }
+
         case GAME_STARTING: {
             drawSprite(NUMBER_ZERO + start_timer, TIMER_START_IND, 116, 76);
             if (start_timer <= 0) { // countdown completed
@@ -185,8 +195,6 @@ int main(void)
     REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
     REG_TM1D =	64715;		// 0.05 seconds for each clock cycle
     REG_TM1CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
-
-	initialise_level_one();
 
 	// Infinite loop
 	for(;;);
