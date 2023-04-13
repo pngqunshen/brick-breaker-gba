@@ -41,6 +41,7 @@
 #define BRICK_LENGTH 16 // brick length
 #define BRICK_HEIGHT 8 // brick height
 #define BRICK_THRESHOLD 2 // brick pixel threshold such that hit is still registered
+#define BRICK_MAX_HEALTH 1 // brick max health
 
 // game config
 #define GAME_DURATION 300 // length of game in seconds
@@ -88,4 +89,5 @@ int num_life = MAX_NUM_LIFE; // number of life left
 enum GameState game_state = GAME_PAUSED; // track status of game
 
 // bricks
-int bricks[BRICK_MAX_NUM][2];
+int bricks[BRICK_MAX_NUM][2]; // position of brick
+int brick_health[BRICK_MAX_NUM]; // health of brick

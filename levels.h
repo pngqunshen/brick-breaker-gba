@@ -10,14 +10,15 @@ void initialise_level_one(void)
 	for (i = 0; i < BRICK_MAX_NUM; i++) {
 		bricks[i][0] = -1;
 		bricks[i][1] = -1;
+		brick_health[i] = BRICK_MAX_HEALTH;
+		drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
 	}
-	for (i = 0; i < 11; i++) {
-		drawSprite(BRICK_RED, BRICKS_IND + i, 16*i + 32, 32);
-		drawSprite(BRICK_RED, BRICKS_IND + 11 + i, 16*i + 32, 40);
-		bricks[i*2][0] = 16*i + 40;
-		bricks[i*2][1] = 36;
-		bricks[i*2+1][0] = 16*i + 40;
-		bricks[i*2+1][1] = 44;
+	for (i = 0; i < 27; i++) {
+		int xb = 16*(i%9) + 48; // restart row after 9 bricks
+		int yb = 32 + (i/9)*8; // go second row after 9 bricks
+		bricks[i][0] = xb+8;
+		bricks[i][1] = yb+4;
+		drawSprite(BRICK_RED, BRICKS_IND + i, xb, yb);
 	}
 	game_state = GAME_STARTING; // unpause game, begin countdown
 }

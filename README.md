@@ -1,12 +1,12 @@
 # brick-breaker-gba
 
 ## TODO
-1. Remove brick health when hit (and maybe sprites for that)
-3. More brick colours for aesthetic and to differentiate health
-4. Powerup B
-5. Win condition
-6. Overall game logic (level 1 and 2)
-7. Main menu
+1. Sprites for different brick health
+2. More brick colours for aesthetic and to differentiate health (optional)
+3. Powerup B (and sprite)
+4. Win condition
+5. Overall game logic (level 1 and 2)
+6. Main menu (optional)
 
 ## Sprites
 1. Ball: 0 - 4

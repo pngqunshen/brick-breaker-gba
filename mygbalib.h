@@ -54,6 +54,15 @@ double limit_angle(double a) {
     }
 }
 
+void brickBreak(int i) {
+    brick_health[i] -= 1;
+    if (brick_health[i] == 0) {
+        drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
+        bricks[i][0] = 240;
+        bricks[i][1] = 160;
+    }
+}
+
 /*
   Ball is drawn at the center of 16x16 sprite, which means that
   the offset have to be considered for collision detection
@@ -112,6 +121,7 @@ bool checkCollision(int x0, int y0)
             if ((yc >= (bricks[i][1]-BRICK_HEIGHT/2-BALL_RADIUS)) && 
                     (yc < (bricks[i][1]+BRICK_HEIGHT/2+BALL_RADIUS))) {
                 ball_heading = limit_angle(-ball_heading);
+                brickBreak(i);
                 return true;
             }
         }
@@ -120,6 +130,7 @@ bool checkCollision(int x0, int y0)
             if ((xc >= (bricks[i][0]-BRICK_LENGTH/2-BALL_RADIUS)) && 
                     (xc < (bricks[i][0]+BRICK_LENGTH/2+BALL_RADIUS))) {
                 ball_heading = limit_angle(M_PI - ball_heading);
+                brickBreak(i);
                 return true;
             }
         }
