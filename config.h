@@ -36,6 +36,12 @@
 #define POWERUP_A_DURATION 10 // duration of powerup A
 #define POWERUP_A_COOLDOWN_DURATION 30 // cooldown time for powerup A
 
+// brick config
+#define BRICK_MAX_NUM 50 // maximum number of bricks supported
+#define BRICK_LENGTH 16 // brick length
+#define BRICK_HEIGHT 8 // brick height
+#define BRICK_THRESHOLD 2 // brick pixel threshold such that hit is still registered
+
 // game config
 #define GAME_DURATION 300 // length of game in seconds
 #define GAME_START_COUNTDOWN 3 // countdown length before starting game
@@ -80,3 +86,6 @@ int start_timer = GAME_START_COUNTDOWN; // time taken before game starts
 // other game states
 int num_life = MAX_NUM_LIFE; // number of life left
 enum GameState game_state = GAME_PAUSED; // track status of game
+
+// bricks
+int bricks[BRICK_MAX_NUM][2];

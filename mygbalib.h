@@ -97,38 +97,34 @@ bool checkCollision(int x0, int y0)
             return true;
         } else {
             game_state = GAME_ENDING;
+            return false;
         }
     }
     
-    // bricks collision IMPLEMENT HERE
-    // int row = sizeof(brick_hp); //hori_edges is an array that contains y-values of top and bottom edges of bricks (top,bttom,top,bottom...)
-    // int col = sizeof(brick_hp[0]); //verti_edges contains x-values of left edges of bricks (left,right,left,right....)
-    // for (int i = 0; i < row; i++) {
-    //     if (hori_edges[i*2] <= ball_bottom && hori_edges[i*2] > yc|| hori_edges[i*2+1] >= ball_top && hori_edges[i*2+1] < yc) { //check if ball_bottom coincides with any top edges in y-coord || top with bottom edges (confirm when ball clips in brick)
-    //         int brick_col = (xc- 32)/16; //to find out which column of bricks ball cooincides with
-    //         if (brick_col < col) { //if brick col > (number of bricks) nothing happens
-    //             if (brick_hp[i][brick_col] > 0) { //brick_hp is global array matrix of the hp of all brick
-    //                 if ((i%2) == 0) { //check if it is top edge or bottom edge
-    //                     ball_heading = M_PI - ball_heading; //reflect upwards
-    //                 } else {
-    //                     ball_heading = -M_PI - ball_heading; // reflect down
-    //                 }
-    //                 brick_hp[i][brick_col] -= 1;
-    //             }    
-    //         }
-    //     }    
-    // }
-    // for (int i = 0; i < col; i++) {
-    //     if (verti_edges[i*2] == ball_right ||verti_edges[i*2+1] == ball_left) { //check if ball_right coincides with any left edges in x-coord || left with right edges
-    //         int brick_row = (yc- 32)/8; //to find out which row of bricks ball cooincides with
-    //         if (brick_row > (row)) { //if brick row > (number of bricks) nothing happens
-    //             if (brick_hp[brick_row][i] > 0) { //brick_hp is global array matrix of the hp of all brick
-    //                 ball_heading = -ball_heading; //reflect upwards
-    //                 brick_hp[brick_row][i] -=1;
-    //             }
-    //         }    
-    //     }    
-    // }
+    // bricks collision
+    int i; // general loop variable
+    for (i = 0; i<BRICK_MAX_NUM; i++) {
+        if (bricks[i][0] == -1 && bricks[i][1] == -1) {
+            break;
+        }
+        if ((xc>=(bricks[i][0]-BRICK_LENGTH/2-BRICK_THRESHOLD)) && 
+                (xc<(bricks[i][0]+BRICK_LENGTH/2+BRICK_THRESHOLD))) {
+            if ((yc >= (bricks[i][1]-BRICK_HEIGHT/2-BALL_RADIUS)) && 
+                    (yc < (bricks[i][1]+BRICK_HEIGHT/2+BALL_RADIUS))) {
+                ball_heading = limit_angle(-ball_heading);
+                return true;
+            }
+        }
+        if ((yc>=(bricks[i][1]-BRICK_HEIGHT/2-BRICK_THRESHOLD)) && 
+                (yc<(bricks[i][1]+BRICK_HEIGHT/2+BRICK_THRESHOLD))) {
+            if ((xc >= (bricks[i][0]-BRICK_LENGTH/2-BALL_RADIUS)) && 
+                    (xc < (bricks[i][0]+BRICK_LENGTH/2+BALL_RADIUS))) {
+                ball_heading = limit_angle(M_PI - ball_heading);
+                return true;
+            }
+        }
+    }
+
     return false;
 }
 

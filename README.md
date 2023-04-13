@@ -1,14 +1,12 @@
 # brick-breaker-gba
 
 ## TODO
-1. Create sprites
-2. Collision detection
-3. Variable platform reflection
-4. Platform movement
-5. Powerups
-6. Game ending (win/lose) conditions
-7. Overall game logic and flow
-8. Main/pause menu
+1. Remove brick health when hit (and maybe sprites for that)
+3. More brick colours for aesthetic and to differentiate health
+4. Powerup B
+5. Win condition
+6. Overall game logic (level 1 and 2)
+7. Main menu
 
 ## Sprites
 1. Ball: 0 - 4
