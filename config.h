@@ -19,7 +19,9 @@
 #define PLATFORM_LEFT_BOUND 32 // before hitting left wall
 #define PLATFORM_RIGHT_BOUND 208 // before hitting right wall
 #define PLATFORM_STEP_SIZE 4 // pixels to move platform at every interrupt
-#define PLATFORM_HEIGHT 144 // height of platform
+#define PLATFORM_Y 144 // y of platform
+#define PLATFORM_HEIGHT 4 // height of platform
+#define PLATFORM_WIDTH 32 // width of platform
 #define PLATFORM_MAX_ANGLE M_PI/6 // maximum additional deflection by hitting end of platform
 
 // ball config

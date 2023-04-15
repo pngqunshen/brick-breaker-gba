@@ -55,13 +55,14 @@ void handler(void)
                 break;
             }
 
-            case GAME_ENDING:
-                if (ball_y < 160) {
+            case GAME_ENDING: {
+                if ((ball_y+8) < 160) {
                     moveBall();
                 } else {
                     game_state = GAME_ENDED;
                 }
                 break;
+            }
 
             case GAME_ENDED: {
                 if (num_life > 1) {

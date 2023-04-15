@@ -82,8 +82,8 @@ void buttonR() {
     case GAME_ENDING: {
         if (platform_x <= PLATFORM_RIGHT_BOUND - step_size) {
             platform_x += step_size;
-            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
-            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
+            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_Y);
+            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_Y);
             if (game_state == GAME_STARTING) {
                 ball_x += PLATFORM_STEP_SIZE;
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
@@ -103,8 +103,8 @@ void buttonL() {
     case GAME_ENDING: {
         if (platform_x >= PLATFORM_LEFT_BOUND + step_size) {
             platform_x -= step_size;
-            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
-            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
+            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_Y);
+            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_Y);
             if (game_state == GAME_STARTING) {
                 ball_x -= PLATFORM_STEP_SIZE;
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);

@@ -92,21 +92,54 @@ bool checkCollision(int x0, int y0)
         ball_heading = limit_angle(-ball_heading);
         return true;
     }
-    if (ball_bottom > BALL_PLATFORM_BOUND) {
-        if ((game_state == GAME_STARTED) && (xc < platform_x + 16) && (xc >= platform_x - 16)) {
-            double ang_extra = (xc - platform_x) / 16.0 * PLATFORM_MAX_ANGLE;
-            double reflection = limit_angle(-ball_heading + ang_extra);
-            if ((reflection < -M_PI + M_PI/9) || (reflection > M_PI/2)) {
-                ball_heading = -M_PI + M_PI/9; // offset slightly so it is not horizontal
-            } else if (reflection > -M_PI/9) {
-                ball_heading = -M_PI/9; // offset slightly so it is not horizontal
+
+    // platform collision
+    // collide with top of platform
+    if (ball_bottom > BALL_PLATFORM_BOUND && ball_bottom <= (BALL_PLATFORM_BOUND+PLATFORM_HEIGHT)) {
+        switch (game_state)
+        {
+        case GAME_STARTED: {
+            if ((xc < platform_x + PLATFORM_WIDTH/2) && (xc >= platform_x - PLATFORM_WIDTH/2)) {
+                double ang_extra = (xc - platform_x) / 16.0 * PLATFORM_MAX_ANGLE;
+                double reflection = limit_angle(-ball_heading + ang_extra);
+                if ((reflection < -M_PI + M_PI/9) || (reflection > M_PI/2)) {
+                    ball_heading = -M_PI + M_PI/9; // offset slightly so it is not horizontal
+                } else if (reflection > -M_PI/9) {
+                    ball_heading = -M_PI/9; // offset slightly so it is not horizontal
+                } else {
+                    ball_heading = reflection;
+                }
+                return true;
             } else {
-                ball_heading = reflection;
+                game_state = GAME_ENDING;
             }
-            return true;
-        } else {
-            game_state = GAME_ENDING;
-            return false;
+            break;
+        }
+
+        case GAME_ENDING: {
+            // collide with left of platform
+            if (yc > BALL_PLATFORM_BOUND && yc <= (BALL_PLATFORM_BOUND+PLATFORM_HEIGHT)) {
+                if (ball_right >= (platform_x-PLATFORM_WIDTH/2) && ball_right < platform_x) {
+                    // if already bouncing away, do nothing, prevent glitch where ball gets stuck
+                    if (ball_heading <= M_PI/2) {
+                        ball_heading = limit_angle(M_PI - ball_heading);
+                        return true;
+                    }
+                }
+                // collide with right of platform
+                else if (ball_left >= platform_x && ball_left < (platform_x+PLATFORM_WIDTH/2)) {
+                    // if already bouncing away, do nothing, prevent glitch where ball gets stuck
+                    if (ball_heading > M_PI/2) {
+                        ball_heading = limit_angle(M_PI - ball_heading);
+                        return true;
+                    }
+                }
+            }
+            break;
+        }
+        
+        default:
+            break;
         }
     }
     
@@ -116,6 +149,7 @@ bool checkCollision(int x0, int y0)
         if (bricks[i][0] == -1 && bricks[i][1] == -1) {
             break;
         }
+        // ball collide with top or bottom of brick
         if ((xc>=(bricks[i][0]-BRICK_LENGTH/2-BRICK_THRESHOLD)) && 
                 (xc<(bricks[i][0]+BRICK_LENGTH/2+BRICK_THRESHOLD))) {
             if ((yc >= (bricks[i][1]-BRICK_HEIGHT/2-BALL_RADIUS)) && 
@@ -125,6 +159,7 @@ bool checkCollision(int x0, int y0)
                 return true;
             }
         }
+        // ball collide left or right of brick
         if ((yc>=(bricks[i][1]-BRICK_HEIGHT/2-BRICK_THRESHOLD)) && 
                 (yc<(bricks[i][1]+BRICK_HEIGHT/2+BRICK_THRESHOLD))) {
             if ((xc >= (bricks[i][0]-BRICK_LENGTH/2-BALL_RADIUS)) && 
