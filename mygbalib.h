@@ -94,7 +94,7 @@ bool checkCollision(int x0, int y0)
     }
     if (ball_bottom > BALL_PLATFORM_BOUND) {
         if ((game_state == GAME_STARTED) && (xc < platform_x + 16) && (xc >= platform_x - 16)) {
-            double ang_extra = (xc - platform_x + 0.5) / 15.5 * PLATFORM_MAX_ANGLE;
+            double ang_extra = (xc - platform_x) / 16.0 * PLATFORM_MAX_ANGLE;
             double reflection = limit_angle(-ball_heading + ang_extra);
             if ((reflection < -M_PI + M_PI/9) || (reflection > M_PI/2)) {
                 ball_heading = -M_PI + M_PI/9; // offset slightly so it is not horizontal

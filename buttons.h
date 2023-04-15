@@ -5,15 +5,30 @@
 #define INPUT                      (KEY_MASK & (~REG_KEYS))
 
 void buttonA() {
-	if (powerupA_cooldown > 0) {
-		// Powerup is on cooldown, do nothing
-		return;
-	}
-	if (!powerupA_active) {
-		powerupA_active = true;
-		step_size *= 2;
-		powerupA_timer = POWERUP_A_DURATION; // set powerup timer
-	}
+    switch (game_state)
+    {
+    case GAME_STARTED: {
+        if (powerupA_cooldown > 0) {
+            // Powerup is on cooldown, do nothing
+            break;
+        }
+        if (!powerupA_active) {
+            powerupA_active = true;
+            step_size *= 2;
+            powerupA_timer = POWERUP_A_DURATION; // set powerup timer
+        }
+        break;
+    }
+
+    case GAME_OVER: {
+        initialise();
+        game_state = GAME_MENU;
+        break;
+    }
+    
+    default:
+        break;
+    }
 }
 
 void buttonB() {}
@@ -48,6 +63,12 @@ void buttonS() {
         initialiseLevelOne();
         break;
     }
+
+    case GAME_OVER: {
+        initialise();
+        game_state = GAME_MENU;
+        break;
+    }
     
     default:
         break;
@@ -55,7 +76,10 @@ void buttonS() {
 }
 
 void buttonR() {
-    if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
+    switch (game_state)
+    {
+    case GAME_STARTED:
+    case GAME_ENDING: {
         if (platform_x <= PLATFORM_RIGHT_BOUND - step_size) {
             platform_x += step_size;
             drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
@@ -65,10 +89,18 @@ void buttonR() {
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
             }
         }
+        break;
+    }
+    
+    default:
+        break;
     }
 }
 void buttonL() {
-    if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
+    switch (game_state)
+    {
+    case GAME_STARTED:
+    case GAME_ENDING: {
         if (platform_x >= PLATFORM_LEFT_BOUND + step_size) {
             platform_x -= step_size;
             drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
@@ -78,6 +110,11 @@ void buttonL() {
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
             }
         }
+        break;
+    }
+    
+    default:
+        break;
     }
 }
 void buttonU() {}

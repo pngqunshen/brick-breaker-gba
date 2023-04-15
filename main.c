@@ -8,8 +8,8 @@
 #include "config.h"
 #include "sprites.h"
 #include "mygbalib.h"
-#include "buttons.h"
 #include "levels.h"
+#include "buttons.h"
 
 // -----------------------------------------------------------------------------
 // Project Entry Point
@@ -30,16 +30,18 @@ void handler(void)
                 mainMenu();
                 break;
 
+            case GAME_STARTING: {
+                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
+                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
+                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
+                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+                break;
+            }
+
             case GAME_STARTED:
                 moveBall();
-                break;
-
-            case GAME_ENDING:
-                if (ball_y < 160) {
-                    moveBall();
-                } else {
-                    game_state = GAME_ENDED;
-                }
                 break;
 
             case GAME_PAUSED: {
@@ -53,15 +55,13 @@ void handler(void)
                 break;
             }
 
-            case GAME_STARTING: {
-                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
-                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
-                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
-                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
-                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
-                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+            case GAME_ENDING:
+                if (ball_y < 160) {
+                    moveBall();
+                } else {
+                    game_state = GAME_ENDED;
+                }
                 break;
-            }
 
             case GAME_ENDED: {
                 if (num_life > 1) {
@@ -82,15 +82,7 @@ void handler(void)
             }
 
 			case GAME_OVER: {
-				drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
-				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
-				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
-				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
-				drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
-				drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
-				drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
-				drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
-                break;
+                gameOver();
 			}
             
             default:
@@ -139,6 +131,11 @@ void handler(void)
             pause_timer -= 1;
             break;
         }
+
+        case GAME_OVER: {
+            main_menu_flash = !main_menu_flash;
+            break;
+        }
         
         default:
             break;
@@ -150,39 +147,13 @@ void handler(void)
 
 int main(void)
 {
-	//////////////////////These stuff probably can remove //////////////////////
-	// Initialize HAMlib
-	// ham_Init();
-
-	// Set background mode
-	// ham_SetBgMode(0);
-
-	// Initialize built-in Text-System
-	// ham_InitText(0);
-
-	// Draw some text
-	// ham_DrawText(1, 1, "Hello World");
-	////////////////////////////////////////////////////////////////////////////
-
     // Set Mode 2
     *(unsigned short *) 0x4000000 = 0x40 | 0x2 | 0x1000;
 
 	////////////////////////////////////////////////////////////////////////////
 	// initialise
 	////////////////////////////////////////////////////////////////////////////
-	fillPalette();
-	fillSprites();
-	int i; // general loop variable
-	// create walls
-	for (i = 0; i < 8; i++) {
-		drawSprite(LEFT_WALL, LEFT_WALL_IND + i, 0, i*16+32);
-		drawSprite(RIGHT_WALL, RIGHT_WALL_IND + i, 224, i*16+32);
-	}
-	for (i = 0; i < 15; i++) {
-		drawSprite(TOP_WALL, TOP_WALL_IND + i, 16*i, 16);
-	}
-	// hearts
-	drawHeart();
+    initialise();
 
     // Set Handler Function for interrupts and enable selected interrupts
     REG_INT = (int)&handler;

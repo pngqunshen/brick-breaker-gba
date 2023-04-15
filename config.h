@@ -70,26 +70,26 @@ enum GameState
 /////////////////////////////////////
 
 // game coordinates
-int platform_x = 120; // position of platform
-int ball_x = BALL_START_X; // horizontal position of ball
-int ball_y = BALL_START_Y; // vertical position of ball
-double ball_heading = BALL_START_HEAD; // heading for ball movement [-pi,pi) increase clockwise
+int platform_x; // position of platform
+int ball_x; // horizontal position of ball
+int ball_y; // vertical position of ball
+double ball_heading; // heading for ball movement [-pi,pi) increase clockwise
 
 // powerups
-bool powerupA_active = false; // flag to indicate whether the powerup is active or not
-int powerupA_timer = 0; // timer for powerupA duration
-int powerupA_cooldown = 0; // timer for powerupA cooldown
-int step_size = PLATFORM_STEP_SIZE; // step size to move platform
+bool powerupA_active; // flag to indicate whether the powerup is active or not
+int powerupA_timer; // timer for powerupA duration
+int powerupA_cooldown; // timer for powerupA cooldown
+int step_size; // step size to move platform
 
 // timer
-int timer = GAME_DURATION; // overall timer
-int pause_timer = GAME_PAUSE_COOLDOWN; // time taken before game can unpause
-int start_timer = GAME_START_COUNTDOWN; // time taken before game starts
+int timer; // overall timer
+int pause_timer; // time taken before game can unpause
+int start_timer; // time taken before game starts
 
 // other game states
-int num_life = MAX_NUM_LIFE; // number of life left
-enum GameState game_state = GAME_MENU; // track status of game
-bool main_menu_flash = true; // flash the press start message
+int num_life; // number of life left
+enum GameState game_state; // track status of game
+bool main_menu_flash; // flash the press start message
 
 // bricks
 int bricks[BRICK_MAX_NUM][2]; // position of brick

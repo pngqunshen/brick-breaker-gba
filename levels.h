@@ -1,3 +1,42 @@
+void initialise(void)
+{
+	// game coordinates
+	platform_x = 120; // position of platform
+	ball_x = BALL_START_X; // horizontal position of ball
+	ball_y = BALL_START_Y; // vertical position of ball
+	ball_heading = BALL_START_HEAD; // heading for ball movement [-pi,pi) increase clockwise
+
+	// powerups
+	powerupA_active = false; // flag to indicate whether the powerup is active or not
+	powerupA_timer = 0; // timer for powerupA duration
+	powerupA_cooldown = 0; // timer for powerupA cooldown
+	step_size = PLATFORM_STEP_SIZE; // step size to move platform
+
+	// timer
+	timer = GAME_DURATION; // overall timer
+	pause_timer = GAME_PAUSE_COOLDOWN; // time taken before game can unpause
+	start_timer = GAME_START_COUNTDOWN; // time taken before game starts
+
+	// other game states
+	num_life = MAX_NUM_LIFE; // number of life left
+	game_state = GAME_MENU; // track status of game
+	main_menu_flash = true; // flash the press start message
+
+	fillPalette();
+	fillSprites();
+	int i; // general loop variable
+	// create walls
+	for (i = 0; i < 8; i++) {
+		drawSprite(LEFT_WALL, LEFT_WALL_IND + i, 0, i*16+32);
+		drawSprite(RIGHT_WALL, RIGHT_WALL_IND + i, 224, i*16+32);
+	}
+	for (i = 0; i < 15; i++) {
+		drawSprite(TOP_WALL, TOP_WALL_IND + i, 16*i, 16);
+	}
+	// hearts
+	drawHeart();
+}
+
 void mainMenu(void) {
 	drawSprite(LETTER_B, START_GAME_MESSAGE_IND, 68, 60);
 	drawSprite(LETTER_R, START_GAME_MESSAGE_IND+1, 76, 60);
@@ -34,6 +73,38 @@ void mainMenu(void) {
 		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+19, 240, 160);
 		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 240, 160);
 		drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 240, 160);
+	}
+}
+
+void gameOver(void)
+{
+	drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+	drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+	drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+	drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+	drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
+	drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
+	drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
+	drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+
+	if (main_menu_flash) {
+		drawSprite(LETTER_T, START_GAME_MESSAGE_IND, 84, 104);
+		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+1, 92, 104);
+		drawSprite(LETTER_Y, START_GAME_MESSAGE_IND+2, 100, 104);
+		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+3, 116, 104);
+		drawSprite(LETTER_G, START_GAME_MESSAGE_IND+4, 124, 104);
+		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+5, 132, 104);
+		drawSprite(LETTER_I, START_GAME_MESSAGE_IND+6, 140, 104);
+		drawSprite(LETTER_N, START_GAME_MESSAGE_IND+7, 148, 104);
+	} else {
+		drawSprite(LETTER_T, START_GAME_MESSAGE_IND, 240, 160);
+		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+1, 240, 160);
+		drawSprite(LETTER_Y, START_GAME_MESSAGE_IND+2, 240, 160);
+		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+3, 240, 160);
+		drawSprite(LETTER_G, START_GAME_MESSAGE_IND+4, 240, 160);
+		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+5, 240, 160);
+		drawSprite(LETTER_I, START_GAME_MESSAGE_IND+6, 240, 160);
+		drawSprite(LETTER_N, START_GAME_MESSAGE_IND+7, 240, 160);
 	}
 }
 
