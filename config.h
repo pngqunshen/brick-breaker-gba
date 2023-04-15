@@ -54,8 +54,8 @@
 
 enum GameState
 {
-    /* data */
     GAME_MENU, // game_state for start menu
+    GAME_MENU_LEVEL, // game_state for selecting level
     GAME_STARTED, // game_state for game started
     GAME_STARTING, // game_state for starting game
     GAME_PAUSED, // game_state for game paused
@@ -63,7 +63,6 @@ enum GameState
     GAME_ENDED, // game_state for game ended
     GAME_OVER // game_state for game over
 };
-
 
 #define M_PI 3.14159265358979323846  // pi
 
@@ -92,6 +91,7 @@ int start_timer; // time taken before game starts
 int num_life; // number of life left
 enum GameState game_state; // track status of game
 bool main_menu_flash; // flash the press start message
+int current_level; // current level of game
 
 // bricks
 int bricks[BRICK_MAX_NUM][2]; // position of brick

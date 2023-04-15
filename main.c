@@ -27,6 +27,7 @@ void handler(void)
         switch (game_state)
         {
             case GAME_MENU:
+            case GAME_MENU_LEVEL:
                 mainMenu();
                 break;
 
@@ -96,7 +97,8 @@ void handler(void)
     {
         switch (game_state)
         {
-        case GAME_MENU: {
+        case GAME_MENU:
+        case GAME_MENU_LEVEL: {
             main_menu_flash = !main_menu_flash;
             break;
         }

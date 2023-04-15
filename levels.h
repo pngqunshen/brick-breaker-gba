@@ -21,6 +21,7 @@ void initialise(void)
 	num_life = MAX_NUM_LIFE; // number of life left
 	game_state = GAME_MENU; // track status of game
 	main_menu_flash = true; // flash the press start message
+	current_level = 1; // current level of game
 
 	fillPalette();
 	fillSprites();
@@ -51,28 +52,78 @@ void mainMenu(void) {
 	drawSprite(LETTER_E, START_GAME_MESSAGE_IND+10, 156, 60);
 	drawSprite(LETTER_R, START_GAME_MESSAGE_IND+11, 164, 60);
 
-	if (main_menu_flash) {
-		drawSprite(LETTER_P, START_GAME_MESSAGE_IND+12, 76, 92);
-		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+13, 84, 92);
-		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+14, 92, 92);
-		drawSprite(LETTER_S, START_GAME_MESSAGE_IND+15, 100, 92);
-		drawSprite(LETTER_S, START_GAME_MESSAGE_IND+16, 108, 92);
-		drawSprite(LETTER_S, START_GAME_MESSAGE_IND+17, 124, 92);
-		drawSprite(LETTER_T, START_GAME_MESSAGE_IND+18, 132, 92);
-		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+19, 140, 92);
-		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 148, 92);
-		drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 156, 92);
-	} else {
-		drawSprite(LETTER_P, START_GAME_MESSAGE_IND+12, 240, 160);
-		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+13, 240, 160);
-		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+14, 240, 160);
-		drawSprite(LETTER_S, START_GAME_MESSAGE_IND+15, 240, 160);
-		drawSprite(LETTER_S, START_GAME_MESSAGE_IND+16, 240, 160);
-		drawSprite(LETTER_S, START_GAME_MESSAGE_IND+17, 240, 160);
-		drawSprite(LETTER_T, START_GAME_MESSAGE_IND+18, 240, 160);
-		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+19, 240, 160);
-		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 240, 160);
-		drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 240, 160);
+	switch (game_state)
+	{
+	case GAME_MENU: {
+		if (main_menu_flash) {
+			drawSprite(LETTER_P, START_GAME_MESSAGE_IND+12, 76, 92);
+			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+13, 84, 92);
+			drawSprite(LETTER_E, START_GAME_MESSAGE_IND+14, 92, 92);
+			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+15, 100, 92);
+			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+16, 108, 92);
+			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+17, 124, 92);
+			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+18, 132, 92);
+			drawSprite(LETTER_A, START_GAME_MESSAGE_IND+19, 140, 92);
+			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 148, 92);
+			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 156, 92);
+		} else {
+			drawSprite(LETTER_P, START_GAME_MESSAGE_IND+12, 240, 160);
+			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+13, 240, 160);
+			drawSprite(LETTER_E, START_GAME_MESSAGE_IND+14, 240, 160);
+			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+15, 240, 160);
+			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+16, 240, 160);
+			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+17, 240, 160);
+			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+18, 240, 160);
+			drawSprite(LETTER_A, START_GAME_MESSAGE_IND+19, 240, 160);
+			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 240, 160);
+			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 240, 160);
+		}
+		break;
+	}
+
+	case GAME_MENU_LEVEL: {
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+12, 76, 92);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+13, 84, 92);
+		drawSprite(LETTER_V, START_GAME_MESSAGE_IND+14, 92, 92);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+15, 100, 92);
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+16, 108, 92);
+		drawSprite(NUMBER_ONE, START_GAME_MESSAGE_IND+17, 124, 92);
+
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+18, 76, 108);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+19, 84, 108);
+		drawSprite(LETTER_V, START_GAME_MESSAGE_IND+20, 92, 108);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+21, 100, 108);
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+22, 108, 108);
+		drawSprite(NUMBER_TWO, START_GAME_MESSAGE_IND+23, 124, 108);
+		
+		switch (current_level)
+		{
+		case 1: {
+			if (main_menu_flash) {
+				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 132, 92);
+			} else {
+				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 240, 160);
+			}
+			break;
+		}
+
+		case 2: {
+			if (main_menu_flash) {
+				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 132, 108);
+			} else {
+				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 240, 160);
+			}
+			break;
+		}
+		
+		default:
+			break;
+		}
+		break;
+	}
+	
+	default:
+		break;
 	}
 }
 

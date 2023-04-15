@@ -7,6 +7,28 @@
 void buttonA() {
     switch (game_state)
     {
+    case GAME_MENU_LEVEL: {
+        int i;
+        for (i=0; i<60; i++) {
+            drawSprite(0,i,240,160);
+        }
+        switch (game_state)
+        {
+        case 1:
+            initialiseLevelOne();
+            break;
+
+        case 2:
+            initialiseLevelOne(); // change to level 2
+            break;
+        
+        default:
+            break;
+        }
+        game_state = GAME_STARTING;
+        break;
+    }
+
     case GAME_STARTED: {
         if (powerupA_cooldown > 0) {
             // Powerup is on cooldown, do nothing
@@ -31,7 +53,18 @@ void buttonA() {
     }
 }
 
-void buttonB() {}
+void buttonB() {
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL:
+        initialise();
+        game_state = GAME_MENU;
+        break;
+    
+    default:
+        break;
+    }
+}
 void buttonSel() {}
 void buttonS() {
     switch (game_state)
@@ -59,8 +92,7 @@ void buttonS() {
         for (i = 0; i<60; i++) {
             drawSprite(0,i,240,160);
         }
-        game_state = GAME_STARTING;
-        initialiseLevelOne();
+        game_state = GAME_MENU_LEVEL;
         break;
     }
 
@@ -117,8 +149,39 @@ void buttonL() {
         break;
     }
 }
-void buttonU() {}
-void buttonD() {}
+void buttonU() 
+{
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL:
+        if (current_level > 1)
+        {
+            current_level--;
+        }
+        
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void buttonD()
+{
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL:
+        if (current_level < 2)
+        {
+            current_level++;
+        }
+        
+        break;
+    
+    default:
+        break;
+    }
+}
 
 void checkbutton(void)
 {
