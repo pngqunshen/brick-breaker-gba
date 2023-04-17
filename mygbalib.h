@@ -85,11 +85,23 @@ void powerupB_handler() {
 
 void brickBreak(int i) {
     brick_health[i] -= ball_dmg;
+    int xb = 16*(i%9) + 48; // restart row after 9 bricks
+	int yb = 32 + (i/9)*8; // go second row after 9 bricks
     if (brick_health[i] <= 0) {
         drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
         bricks[i][0] = 240;
         bricks[i][1] = 160;
     }
+    else if (brick_health[i] == 3) {
+        drawSprite(NUMBER_ZERO+brick_health[i], BRICKS_IND + i, xb, yb);
+    }
+    else if (brick_health[i] == 2) {
+        drawSprite(NUMBER_ZERO+brick_health[i], BRICKS_IND + i, xb, yb);
+    }
+    else if (brick_health[i] == 1) {
+        drawSprite(NUMBER_ZERO+brick_health[i], BRICKS_IND + i, xb, yb);
+    }
+    
 }
 
 /*
