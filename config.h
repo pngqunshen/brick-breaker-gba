@@ -5,6 +5,7 @@
 #define BRICKS_IND 10 // first brick index
 #define LIFE_IND 60 // first life index
 #define POWERUP_IND 65 // first powerup index
+#define POWERUPB_IND 66 // second powerup index
 #define LEFT_WALL_IND 70 // first left wall index
 #define RIGHT_WALL_IND 80 // first right wall index
 #define TOP_WALL_IND 90 // first right wall index
@@ -12,6 +13,8 @@
 #define TIMER_START_IND 113 // game start timer index
 #define TIMER_POWERUP_IND 114 // powerup timer index
 #define TIMER_COOLDOWN_IND 116 // cooldown timer index
+#define TIMER_POWERUP_B_IND 1 // powerup timer index
+#define TIMER_COOLDOWN_B_IND 3 // cooldown timer index
 #define GAME_MESSAGE_IND 118 // game message index
 #define START_GAME_MESSAGE_IND 0 // start game message index, overwrites ball index
 
@@ -32,11 +35,13 @@
 #define BALL_START_X 112 // start x position of ball
 #define BALL_START_Y 90 // start y position of ball
 #define BALL_START_HEAD M_PI/2 // start heading of ball
+#define BALL_DAMAGE 1 // damage ball does to brick
 
 // powerup config
 #define POWERUP_A_DURATION 10 // duration of powerup A
 #define POWERUP_A_COOLDOWN_DURATION 30 // cooldown time for powerup A
-
+#define POWERUP_B_DURATION 10 // duration of powerup A
+#define POWERUP_B_COOLDOWN_DURATION 50 // cooldown time for powerup A
 // brick config
 #define BRICK_MAX_NUM 50 // maximum number of bricks supported
 #define BRICK_LENGTH 16 // brick length
@@ -80,6 +85,10 @@ bool powerupA_active = false; // flag to indicate whether the powerup is active 
 int powerupA_timer = 0; // timer for powerupA duration
 int powerupA_cooldown = 0; // timer for powerupA cooldown
 int step_size = PLATFORM_STEP_SIZE; // step size to move platform
+bool powerupB_active = false; // flag to indicate whether the powerup is active or not
+int powerupB_timer = 0; // timer for powerupA duration
+int powerupB_cooldown = 0; // timer for powerupA cooldown
+int ball_dmg = BALL_DAMAGE; // step size to move platform
 
 // timer
 int timer = GAME_DURATION; // overall timer
