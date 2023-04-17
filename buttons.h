@@ -60,10 +60,23 @@ void buttonB() {
         initialise();
         game_state = GAME_MENU;
         break;
+
+    case GAME_STARTED: {
+        if (powerupB_cooldown > 0) {
+            // Powerup is on cooldown, do nothing
+            return;
+        }
+        if (!powerupB_active) {
+            powerupB_active = true;
+            ball_dmg *= 2;
+            powerupB_timer = POWERUP_B_DURATION; // set powerup timer
+        }
+    }
     
     default:
         break;
     }
+
 }
 void buttonSel() {}
 void buttonS() {

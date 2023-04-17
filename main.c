@@ -124,6 +124,7 @@ void handler(void)
             drawSprite(NUMBER_ZERO + ones, TIMER_OVERALL_IND + 2, 16, 0);
             timer -= 1;
             powerupA_handler();
+            powerupB_handler();
 			if (timer < 0) {
 				game_state = GAME_OVER;
 			}

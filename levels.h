@@ -11,6 +11,10 @@ void initialise(void)
 	powerupA_timer = 0; // timer for powerupA duration
 	powerupA_cooldown = 0; // timer for powerupA cooldown
 	step_size = PLATFORM_STEP_SIZE; // step size to move platform
+	powerupB_active = false; // flag to indicate whether the powerup is active or not
+	powerupB_timer = 0; // timer for powerupA duration
+	powerupB_cooldown = 0; // timer for powerupA cooldown
+	ball_dmg = BALL_DAMAGE; // step size to move platform
 
 	// timer
 	timer = GAME_DURATION; // overall timer
@@ -82,25 +86,25 @@ void mainMenu(void) {
 	}
 
 	case GAME_MENU_LEVEL: {
-		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+12, 76, 92);
-		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+13, 84, 92);
-		drawSprite(LETTER_V, START_GAME_MESSAGE_IND+14, 92, 92);
-		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+15, 100, 92);
-		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+16, 108, 92);
-		drawSprite(NUMBER_ONE, START_GAME_MESSAGE_IND+17, 124, 92);
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+12, 92, 92);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+13, 100, 92);
+		drawSprite(LETTER_V, START_GAME_MESSAGE_IND+14, 108, 92);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+15, 116, 92);
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+16, 124, 92);
+		drawSprite(NUMBER_ONE, START_GAME_MESSAGE_IND+17, 140, 92);
 
-		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+18, 76, 108);
-		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+19, 84, 108);
-		drawSprite(LETTER_V, START_GAME_MESSAGE_IND+20, 92, 108);
-		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+21, 100, 108);
-		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+22, 108, 108);
-		drawSprite(NUMBER_TWO, START_GAME_MESSAGE_IND+23, 124, 108);
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+18, 92, 108);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+19, 100, 108);
+		drawSprite(LETTER_V, START_GAME_MESSAGE_IND+20, 108, 108);
+		drawSprite(LETTER_E, START_GAME_MESSAGE_IND+21, 116, 108);
+		drawSprite(LETTER_L, START_GAME_MESSAGE_IND+22, 124, 108);
+		drawSprite(NUMBER_TWO, START_GAME_MESSAGE_IND+23, 140, 108);
 		
 		switch (current_level)
 		{
 		case 1: {
 			if (main_menu_flash) {
-				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 132, 92);
+				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 148, 92);
 			} else {
 				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 240, 160);
 			}
@@ -109,7 +113,7 @@ void mainMenu(void) {
 
 		case 2: {
 			if (main_menu_flash) {
-				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 132, 108);
+				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 148, 108);
 			} else {
 				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 240, 160);
 			}
