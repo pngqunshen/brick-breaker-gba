@@ -10,6 +10,7 @@
 #include "mygbalib.h"
 #include "levels.h"
 #include "buttons.h"
+#include "powerups.h"
 
 // -----------------------------------------------------------------------------
 // Project Entry Point

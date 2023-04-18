@@ -68,7 +68,7 @@ void buttonB() {
         }
         if (!powerupB_active) {
             powerupB_active = true;
-            ball_dmg *= 2;
+            ball_dmg = 100;
             powerupB_timer = POWERUP_B_DURATION; // set powerup timer
         }
     }

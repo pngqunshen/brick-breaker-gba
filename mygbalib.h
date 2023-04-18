@@ -54,54 +54,30 @@ double limit_angle(double a) {
     }
 }
 
-void powerupB_handler() {
-    if(powerupB_active) {
-        int ones = powerupB_timer % 10;
-        int tens = (powerupB_timer / 10) % 10;
-        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_B_IND, 88, 0);
-        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_B_IND + 1, 80, 0);
-        powerupB_timer--;
-		drawSprite(POWERUP_B, POWERUPB_IND, 64, 0);
-        if (powerupB_timer <= 0) {
-			ball_dmg /= 2; // revert ball damage to 1
-			powerupB_active = false;
-			powerupB_cooldown = POWERUP_B_COOLDOWN_DURATION; // set cooldown
-            drawSprite(POWERUP_B, POWERUPB_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_B_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_B_IND+1, 240, 160);
-		}
-    } else if (powerupB_cooldown > 0) {
-        int ones = powerupB_cooldown % 10;
-        int tens = (powerupB_cooldown / 10) % 10;
-        drawSprite(NUMBER_ZERO + ones, TIMER_COOLDOWN_B_IND, 88, 0);
-        drawSprite(NUMBER_ZERO + tens, TIMER_COOLDOWN_B_IND + 1, 80, 0);
-        powerupB_cooldown--;
-        if (powerupB_cooldown <= 0) {
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_B_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_B_IND+1, 240, 160);
-        }
-	}
-}
-
 void brickBreak(int i) {
     brick_health[i] -= ball_dmg;
-    int xb = 16*(i%9) + 48; // restart row after 9 bricks
-	int yb = 32 + (i/9)*8; // go second row after 9 bricks
-    if (brick_health[i] <= 0) {
+    int xb = bricks[i][0]-BRICK_LENGTH/2;
+	int yb = bricks[i][1]-BRICK_HEIGHT/2;
+    switch (brick_health[i])
+    {
+    case 1:
+        drawSprite(BRICK_RED, BRICKS_IND + i, xb, yb);
+        break;
+    
+    case 2:
+        drawSprite(BRICK_YELLOW, BRICKS_IND + i, xb, yb);
+        break;
+    
+    case 3:
+        drawSprite(BRICK_GREEN, BRICKS_IND + i, xb, yb);
+        break;
+    
+    default:
         drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
         bricks[i][0] = 240;
         bricks[i][1] = 160;
-    }
-    else if (brick_health[i] == 3) {
-        drawSprite(NUMBER_ZERO+brick_health[i], BRICKS_IND + i, xb, yb);
-    }
-    else if (brick_health[i] == 2) {
-        drawSprite(NUMBER_ZERO+brick_health[i], BRICKS_IND + i, xb, yb);
-    }
-    else if (brick_health[i] == 1) {
-        drawSprite(NUMBER_ZERO+brick_health[i], BRICKS_IND + i, xb, yb);
-    }
-    
+        break;
+    }   
 }
 
 /*
@@ -141,12 +117,12 @@ bool checkCollision(int x0, int y0)
         {
         case GAME_STARTED: {
             if ((xc < platform_x + PLATFORM_WIDTH/2) && (xc >= platform_x - PLATFORM_WIDTH/2)) {
-                double ang_extra = (xc - platform_x) / 16.0 * PLATFORM_MAX_ANGLE;
+                double ang_extra = (xc - platform_x) / 16.0 * PLATFORM_MAX_DEFLECTION;
                 double reflection = limit_angle(-ball_heading + ang_extra);
-                if ((reflection < -M_PI + M_PI/9) || (reflection > M_PI/2)) {
-                    ball_heading = -M_PI + M_PI/9; // offset slightly so it is not horizontal
-                } else if (reflection > -M_PI/9) {
-                    ball_heading = -M_PI/9; // offset slightly so it is not horizontal
+                if ((reflection < -M_PI + PLATFORM_MIN_ANGLE) || (reflection > M_PI/2)) {
+                    ball_heading = -M_PI + PLATFORM_MIN_ANGLE; // offset slightly so it is not horizontal
+                } else if (reflection > -PLATFORM_MIN_ANGLE) {
+                    ball_heading = -PLATFORM_MIN_ANGLE; // offset slightly so it is not horizontal
                 } else {
                     ball_heading = reflection;
                 }
@@ -214,36 +190,6 @@ bool checkCollision(int x0, int y0)
 
     return false;
 }
-
-void powerupA_handler() {
-	if (powerupA_active) {
-        int ones = powerupA_timer % 10;
-        int tens = (powerupA_timer / 10) % 10;
-        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_IND, 56, 0);
-        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_IND + 1, 48, 0);
-		powerupA_timer--;
-		drawSprite(POWERUP_A, POWERUP_IND, 32, 0);
-		if (powerupA_timer <= 0) {
-			step_size /= 2; // revert platform step size
-			powerupA_active = false;
-			powerupA_cooldown = POWERUP_A_COOLDOWN_DURATION; // set cooldown
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_IND+1, 240, 160);
-            drawSprite(POWERUP_A, POWERUP_IND, 240, 160);
-		}
-	} else if (powerupA_cooldown > 0) {
-        int ones = powerupA_cooldown % 10;
-        int tens = (powerupA_cooldown / 10) % 10;
-        drawSprite(NUMBER_ZERO + ones, TIMER_COOLDOWN_IND, 56, 0);
-        drawSprite(NUMBER_ZERO + tens, TIMER_COOLDOWN_IND + 1, 48, 0);
-        powerupA_cooldown--;
-        if (powerupA_cooldown <= 0) {
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_IND+1, 240, 160);
-        }
-	}
-}
-
 
 /*
   move using Bresenham line algorithm

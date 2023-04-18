@@ -11,8 +11,8 @@
 #define TOP_WALL_IND 90 // first right wall index
 #define TIMER_OVERALL_IND 110 // first overall timer index
 #define TIMER_START_IND 113 // game start timer index
-#define TIMER_POWERUP_IND 114 // powerup timer index
-#define TIMER_COOLDOWN_IND 116 // cooldown timer index
+#define TIMER_POWERUP_A_IND 114 // powerup timer index
+#define TIMER_COOLDOWN_A_IND 116 // cooldown timer index
 #define TIMER_POWERUP_B_IND 1 // powerup timer index
 #define TIMER_COOLDOWN_B_IND 3 // cooldown timer index
 #define GAME_MESSAGE_IND 118 // game message index
@@ -25,7 +25,8 @@
 #define PLATFORM_Y 144 // y of platform
 #define PLATFORM_HEIGHT 4 // height of platform
 #define PLATFORM_WIDTH 32 // width of platform
-#define PLATFORM_MAX_ANGLE M_PI/6 // maximum additional deflection by hitting end of platform
+#define PLATFORM_MAX_DEFLECTION M_PI/6 // maximum additional deflection by hitting end of platform
+#define PLATFORM_MIN_ANGLE M_PI/9 // minimum allowed angle of reflection from platform
 
 // ball config
 #define BALL_UPPER_BOUND 32 // before hitting upper wall
@@ -44,12 +45,13 @@
 #define POWERUP_A_COOLDOWN_DURATION 30 // cooldown time for powerup A
 #define POWERUP_B_DURATION 10 // duration of powerup A
 #define POWERUP_B_COOLDOWN_DURATION 50 // cooldown time for powerup A
+
 // brick config
 #define BRICK_MAX_NUM 50 // maximum number of bricks supported
 #define BRICK_LENGTH 16 // brick length
 #define BRICK_HEIGHT 8 // brick height
 #define BRICK_THRESHOLD 2 // brick pixel threshold such that hit is still registered
-#define BRICK_MAX_HEALTH 1 // brick max health
+#define BRICK_MAX_HEALTH 3 // brick max health
 
 // game config
 #define GAME_DURATION 300 // length of game in seconds
