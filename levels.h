@@ -172,6 +172,7 @@ void initialiseLevelOne(void)
 	// ball
 	drawSprite(BALL, BALL_IND, ball_x, ball_y);
 	// brick
+	int level1_layout[] = {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,};
 	for (i = 0; i < BRICK_MAX_NUM; i++) {
 		bricks[i][0] = -1;
 		bricks[i][1] = -1;
@@ -183,7 +184,19 @@ void initialiseLevelOne(void)
 		int yb = 32 + (i/9)*8; // go second row after 9 bricks
 		bricks[i][0] = xb+8;
 		bricks[i][1] = yb+4;
-		drawSprite(BRICK_RED, BRICKS_IND + i, xb, yb);
+		brick_health[i] = level1_layout[i];
+		if (level1_layout[i] == 1){
+			drawSprite(NUMBER_ONE, BRICKS_IND + i, xb, yb);
+		}
+		else if (level1_layout[i] == 2){
+			drawSprite(NUMBER_TWO, BRICKS_IND + i, xb, yb);
+		}
+		else if (level1_layout[i] == 3){
+			drawSprite(NUMBER_THREE, BRICKS_IND + i, xb, yb);
+		}
+		else {
+			drawSprite(NUMBER_FOUR, BRICKS_IND + i, xb, yb);
+		}
 	}
 	game_state = GAME_STARTING; // unpause game, begin countdown
 }
