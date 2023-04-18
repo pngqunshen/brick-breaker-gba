@@ -33,8 +33,10 @@ void handler(void)
             case GAME_STARTED:
                 if (bricks_eliminated < 27) {
                 moveBall();
-                } else {
+                } else if (bricks_eliminated == 27) {
                     game_state = GAME_NEXT;
+                } else if (bricks_eliminated == 72) {
+                    game_state = GAME_WON;
                 }
                 break;
 
@@ -92,8 +94,8 @@ void handler(void)
                 drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 100, 72);
                 drawSprite(LETTER_L, GAME_MESSAGE_IND+4, 108, 72);
                 drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 124, 72);
-                drawSprite(LETTER_O, GAME_MESSAGE_IND+5, 132, 72);
-                drawSprite(LETTER_N, GAME_MESSAGE_IND+5, 140, 72);
+                drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 132, 72);
+                drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 140, 72);
                 break;
             }
 
@@ -109,6 +111,16 @@ void handler(void)
                 break;
 			}
             
+            case GAME_WON: {
+                drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+				drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 128, 72);
+				drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
+				drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
+                break;
+            }
             default:
                 break;
         }
@@ -157,11 +169,19 @@ void handler(void)
         }
         
         case GAME_NEXT: {
-            drawSprite(NUMBER_ZERO + level2_timer, TIMER_LEVEL2_IND, 116, 60)
+            drawSprite(NUMBER_ZERO + level2_timer, TIMER_LEVEL2_IND, 116, 60);
             level2_timer-=1;
             if (level2_timer < 0) {
-                game_state = GAME_STARTING;
                 initialiseLevelTwo();
+                game_state = GAME_STARTED;
+                drawSprite(LETTER_L, GAME_MESSAGE_IND, 240, 160);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+1, 240, 160);
+                drawSprite(LETTER_V, GAME_MESSAGE_IND+2, 240, 160);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 240, 160);
+                drawSprite(LETTER_L, GAME_MESSAGE_IND+4, 240, 160);
+                drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 240, 160);
+                drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 240, 160);
+                drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 240, 160);
             }
             break;
         }
