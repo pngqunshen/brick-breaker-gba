@@ -57,6 +57,7 @@ double limit_angle(double a) {
 void brickBreak(int i) {
     brick_health[i] -= 1;
     if (brick_health[i] == 0) {
+        bricks_eliminated += 1;
         drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
         bricks[i][0] = 240;
         bricks[i][1] = 160;
