@@ -13,6 +13,7 @@
 #define TIMER_POWERUP_IND 114 // powerup timer index
 #define TIMER_COOLDOWN_IND 116 // cooldown timer index
 #define GAME_MESSAGE_IND 118 // game message index
+#define TIMER_LEVEL2_IND 140 // level 2 index
 #define START_GAME_MESSAGE_IND 0 // start game message index, overwrites ball index
 
 // platform config
@@ -49,6 +50,7 @@
 #define GAME_START_COUNTDOWN 3 // countdown length before starting game
 #define GAME_PAUSE_COOLDOWN 2 // cooldown time when pause initiated
 #define MAX_NUM_LIFE 4 // cooldown time when pause initiated
+#define LEVEL2_START_COUNTDOWN 5 // countdown time before level 2 kicks in
 
 enum GameState
 {
@@ -59,7 +61,9 @@ enum GameState
     GAME_PAUSED, // game_state for game paused
     GAME_ENDING, // game_state for game ending
     GAME_ENDED, // game_state for game ended
-    GAME_OVER // game_state for game over
+    GAME_NEXT, // game_state for next level
+    GAME_OVER, // game_state for game over
+    GAME_WON // game_state for game won
 };
 
 
@@ -85,11 +89,13 @@ int step_size = PLATFORM_STEP_SIZE; // step size to move platform
 int timer = GAME_DURATION; // overall timer
 int pause_timer = GAME_PAUSE_COOLDOWN; // time taken before game can unpause
 int start_timer = GAME_START_COUNTDOWN; // time taken before game starts
+int level2_timer = LEVEL2_START_COUNTDOWN; // time taken before level 2 kicks in
 
 // other game states
 int num_life = MAX_NUM_LIFE; // number of life left
 enum GameState game_state = GAME_MENU; // track status of game
 bool main_menu_flash = true; // flash the press start message
+int bricks_eliminated = 0; // counter for number of bricks eliminated
 
 // bricks
 int bricks[BRICK_MAX_NUM][2]; // position of brick
