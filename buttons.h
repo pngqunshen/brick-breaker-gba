@@ -17,7 +17,9 @@ void buttonA() {
 }
 
 void buttonB() {}
-void buttonSel() {}
+void buttonSel() {
+    game_state = GAME_NEXT;
+}
 void buttonS() {
     switch (game_state)
     {

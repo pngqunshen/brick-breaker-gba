@@ -31,14 +31,18 @@ void handler(void)
                 break;
 
             case GAME_STARTED:
+                if (bricks_eliminated < 27) {
                 moveBall();
+                } else {
+                    game_state = GAME_NEXT;
+                }
                 break;
 
             case GAME_ENDING:
                 if (ball_y < 160) {
                     moveBall();
                 } else {
-                    game_state = GAME_ENDED;
+                    game_state = GAME_ENDED; 
                 }
                 break;
 
@@ -79,6 +83,18 @@ void handler(void)
 					game_state = GAME_OVER;
 				}
 				break;
+            }
+
+            case GAME_NEXT: {
+                drawSprite(LETTER_L, GAME_MESSAGE_IND, 76, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+1, 84, 72);
+                drawSprite(LETTER_V, GAME_MESSAGE_IND+2, 92, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 100, 72);
+                drawSprite(LETTER_L, GAME_MESSAGE_IND+4, 108, 72);
+                drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 124, 72);
+                drawSprite(LETTER_O, GAME_MESSAGE_IND+5, 132, 72);
+                drawSprite(LETTER_N, GAME_MESSAGE_IND+5, 140, 72);
+                break;
             }
 
 			case GAME_OVER: {
@@ -140,6 +156,15 @@ void handler(void)
             break;
         }
         
+        case GAME_NEXT: {
+            drawSprite(NUMBER_ZERO + level2_timer, TIMER_LEVEL2_IND, 116, 60)
+            level2_timer-=1;
+            if (level2_timer < 0) {
+                game_state = GAME_STARTING;
+                initialiseLevelTwo();
+            }
+            break;
+        }
         default:
             break;
         }
