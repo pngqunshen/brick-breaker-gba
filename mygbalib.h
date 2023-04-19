@@ -26,9 +26,12 @@ void fillSprites(void)
 
 	// draw all sprites on screen, but all of them outside of the screen (starting at position (240,160) the bottom right corner of the GBA screen)
     for(i = 0; i < 128; i++)
-        drawSprite(0, i, 240,160);
+        drawSprite(0, i, SCREEN_WIDTH,SCREEN_HEIGHT);
 }
 
+void removeFromScreen(int i) {
+    drawSprite(0,i,SCREEN_WIDTH,SCREEN_HEIGHT);
+}
 
 void drawHeart() {
     int i;
@@ -39,6 +42,29 @@ void drawHeart() {
 			drawSprite(EMPTY_HEART, LIFE_IND + i, 224 - 16*i, 0);
 		}
 	}
+}
+
+void drawBrick(int x, int y, int i) {
+    switch (brick_health[i])
+    {
+    case 1:
+        drawSprite(BRICK_RED, BRICKS_IND + i, x, y);
+        break;
+
+    case 2:
+        drawSprite(BRICK_YELLOW, BRICKS_IND + i, x, y);
+        break;
+
+    case 3:
+        drawSprite(BRICK_GREEN, BRICKS_IND + i, x, y);
+        break;
+
+    default:
+        removeFromScreen(BRICKS_IND+i);
+        bricks[i][0] = SCREEN_WIDTH;
+        bricks[i][1] = SCREEN_HEIGHT;
+        break;
+    }
 }
 
 /*
@@ -58,26 +84,9 @@ void brickBreak(int i) {
     brick_health[i] -= ball_dmg;
     int xb = bricks[i][0]-BRICK_LENGTH/2;
 	int yb = bricks[i][1]-BRICK_HEIGHT/2;
-    switch (brick_health[i])
-    {
-    case 1:
-        drawSprite(BRICK_RED, BRICKS_IND + i, xb, yb);
-        break;
-    
-    case 2:
-        drawSprite(BRICK_YELLOW, BRICKS_IND + i, xb, yb);
-        break;
-    
-    case 3:
-        drawSprite(BRICK_GREEN, BRICKS_IND + i, xb, yb);
-        break;
-    
-    default:
-        drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
-        bricks[i][0] = 240;
-        bricks[i][1] = 160;
-        break;
-    }   
+    if (brick_health[i] <=0)
+        bricks_eliminated += 1;
+    drawBrick(xb, yb, i);
 }
 
 /*

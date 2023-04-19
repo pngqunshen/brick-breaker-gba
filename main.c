@@ -33,21 +33,25 @@ void handler(void)
                 break;
 
             case GAME_STARTING: {
-                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
-                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
-                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
-                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
-                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
-                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+                int i;
+                for (i=0; i<6; i++) {
+                    removeFromScreen(GAME_MESSAGE_IND+i);
+                }
                 break;
             }
 
             case GAME_STARTED:
+                if (bricks_eliminated < 27) {
                 moveBall();
+                } else if (bricks_eliminated == 27) {
+                    game_state = GAME_NEXT;
+                } else if (bricks_eliminated == 72) {
+                    game_state = GAME_WON;
+                }
                 break;
 
             case GAME_PAUSED: {
-                drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
+                removeFromScreen(TIMER_START_IND);
                 drawSprite(LETTER_P, GAME_MESSAGE_IND, 96, 72);
                 drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 104, 72);
                 drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 112, 72);
@@ -58,7 +62,7 @@ void handler(void)
             }
 
             case GAME_ENDING: {
-                if ((ball_y+8) < 160) {
+                if ((ball_y+8) < SCREEN_HEIGHT) {
                     moveBall();
                 } else {
                     game_state = GAME_ENDED;
@@ -84,10 +88,40 @@ void handler(void)
 				break;
             }
 
+            case GAME_NEXT: {
+                drawSprite(LETTER_L, GAME_MESSAGE_IND, 84, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+1, 92, 72);
+                drawSprite(LETTER_V, GAME_MESSAGE_IND+2, 100, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 108, 72);
+                drawSprite(LETTER_L, GAME_MESSAGE_IND+4, 116, 72);
+                drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 132, 72);
+                drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 140, 72);
+                drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 148, 72);
+                break;
+            }
+
 			case GAME_OVER: {
-                gameOver();
+				drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+				drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
+				drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
+				drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
+				drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+                break;
 			}
             
+            case GAME_WON: {
+                drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+				drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 128, 72);
+				drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
+				drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
+                break;
+            }
             default:
                 break;
         }
@@ -108,7 +142,7 @@ void handler(void)
             drawSprite(NUMBER_ZERO + start_timer, TIMER_START_IND, 116, 76);
             if (start_timer <= 0) { // countdown completed
                 game_state = GAME_STARTED;
-                drawSprite(NUMBER_ZERO, TIMER_START_IND, 240, 160);
+                removeFromScreen(TIMER_START_IND);
             }
             start_timer -= 1;
             pause_timer -= 1;
@@ -136,12 +170,19 @@ void handler(void)
             pause_timer -= 1;
             break;
         }
-
-        case GAME_OVER: {
-            main_menu_flash = !main_menu_flash;
+        
+        case GAME_NEXT: {
+            drawSprite(NUMBER_ZERO + next_level_timer, TIMER_NEXT_LEVEL_IND, 116, 60);
+            next_level_timer -=1 ;
+            if (next_level_timer < 0) {
+                initialiseLevelTwo();
+                int i;
+                for (i=0; i<8; i++) {
+                    removeFromScreen(GAME_MESSAGE_IND+i);
+                }
+            }
             break;
         }
-        
         default:
             break;
         }

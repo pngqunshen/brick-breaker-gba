@@ -10,16 +10,16 @@ void buttonA() {
     case GAME_MENU_LEVEL: {
         int i;
         for (i=0; i<60; i++) {
-            drawSprite(0,i,240,160);
+            removeFromScreen(i);
         }
-        switch (game_state)
+        switch (current_level)
         {
         case 1:
             initialiseLevelOne();
             break;
 
         case 2:
-            initialiseLevelOne(); // change to level 2
+            initialiseLevelTwo();
             break;
         
         default:
@@ -78,7 +78,11 @@ void buttonB() {
     }
 
 }
-void buttonSel() {}
+
+void buttonSel() {
+    // game_state = GAME_NEXT;
+}
+
 void buttonS() {
     switch (game_state)
     {
@@ -103,7 +107,7 @@ void buttonS() {
     case GAME_MENU: {
         int i;
         for (i = 0; i<60; i++) {
-            drawSprite(0,i,240,160);
+            drawSprite(0,i,SCREEN_WIDTH,SCREEN_HEIGHT);
         }
         game_state = GAME_MENU_LEVEL;
         break;

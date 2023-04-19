@@ -10,9 +10,9 @@ void powerupA_handler() {
 			step_size /= 2; // revert platform step size
 			powerupA_active = false;
 			powerupA_cooldown = POWERUP_A_COOLDOWN_DURATION; // set cooldown
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_A_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_A_IND+1, 240, 160);
-            drawSprite(POWERUP_A, POWERUP_IND, 240, 160);
+            removeFromScreen(TIMER_POWERUP_A_IND);
+            removeFromScreen(TIMER_POWERUP_A_IND+1);
+            removeFromScreen(POWERUP_IND);
 		}
 	} else if (powerupA_cooldown > 0) {
         int ones = powerupA_cooldown % 10;
@@ -21,8 +21,8 @@ void powerupA_handler() {
         drawSprite(NUMBER_ZERO + tens, TIMER_COOLDOWN_A_IND + 1, 48, 0);
         powerupA_cooldown--;
         if (powerupA_cooldown <= 0) {
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_A_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_A_IND+1, 240, 160);
+            removeFromScreen(TIMER_COOLDOWN_A_IND);
+            removeFromScreen(TIMER_COOLDOWN_A_IND+1);
         }
 	}
 }
@@ -39,9 +39,9 @@ void powerupB_handler() {
 			ball_dmg = 1; // revert ball damage to 1
 			powerupB_active = false;
 			powerupB_cooldown = POWERUP_B_COOLDOWN_DURATION; // set cooldown
-            drawSprite(POWERUP_B, POWERUPB_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_B_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_POWERUP_B_IND+1, 240, 160);
+            removeFromScreen(POWERUPB_IND);
+            removeFromScreen(TIMER_POWERUP_B_IND);
+            removeFromScreen(TIMER_POWERUP_B_IND+1);
 		}
     } else if (powerupB_cooldown > 0) {
         int ones = powerupB_cooldown % 10;
@@ -50,8 +50,8 @@ void powerupB_handler() {
         drawSprite(NUMBER_ZERO + tens, TIMER_COOLDOWN_B_IND + 1, 80, 0);
         powerupB_cooldown--;
         if (powerupB_cooldown <= 0) {
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_B_IND, 240, 160);
-            drawSprite(NUMBER_ZERO, TIMER_COOLDOWN_B_IND+1, 240, 160);
+            removeFromScreen(TIMER_COOLDOWN_B_IND);
+            removeFromScreen(TIMER_COOLDOWN_B_IND+1);
         }
 	}
 }

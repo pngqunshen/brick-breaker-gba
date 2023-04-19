@@ -20,11 +20,13 @@ void initialise(void)
 	timer = GAME_DURATION; // overall timer
 	pause_timer = GAME_PAUSE_COOLDOWN; // time taken before game can unpause
 	start_timer = GAME_START_COUNTDOWN; // time taken before game starts
+	next_level_timer = NEXT_LEVEL_COUNTDOWN; // time taken before next level kicks in
 
 	// other game states
 	num_life = MAX_NUM_LIFE; // number of life left
 	game_state = GAME_MENU; // track status of game
 	main_menu_flash = true; // flash the press start message
+	bricks_eliminated = 0; // counter for number of bricks eliminated
 	current_level = 1; // current level of game
 
 	fillPalette();
@@ -71,16 +73,10 @@ void mainMenu(void) {
 			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 148, 92);
 			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 156, 92);
 		} else {
-			drawSprite(LETTER_P, START_GAME_MESSAGE_IND+12, 240, 160);
-			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+13, 240, 160);
-			drawSprite(LETTER_E, START_GAME_MESSAGE_IND+14, 240, 160);
-			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+15, 240, 160);
-			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+16, 240, 160);
-			drawSprite(LETTER_S, START_GAME_MESSAGE_IND+17, 240, 160);
-			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+18, 240, 160);
-			drawSprite(LETTER_A, START_GAME_MESSAGE_IND+19, 240, 160);
-			drawSprite(LETTER_R, START_GAME_MESSAGE_IND+20, 240, 160);
-			drawSprite(LETTER_T, START_GAME_MESSAGE_IND+21, 240, 160);
+			int i;
+			for (i=12; i<22; i++) {
+            	removeFromScreen(START_GAME_MESSAGE_IND+i);
+			}
 		}
 		break;
 	}
@@ -106,7 +102,7 @@ void mainMenu(void) {
 			if (main_menu_flash) {
 				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 148, 92);
 			} else {
-				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 240, 160);
+				removeFromScreen(START_GAME_MESSAGE_IND+24);
 			}
 			break;
 		}
@@ -115,7 +111,7 @@ void mainMenu(void) {
 			if (main_menu_flash) {
 				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 148, 108);
 			} else {
-				drawSprite(BALL, START_GAME_MESSAGE_IND+24, 240, 160);
+				removeFromScreen(START_GAME_MESSAGE_IND+24);
 			}
 			break;
 		}
@@ -152,14 +148,10 @@ void gameOver(void)
 		drawSprite(LETTER_I, START_GAME_MESSAGE_IND+6, 140, 104);
 		drawSprite(LETTER_N, START_GAME_MESSAGE_IND+7, 148, 104);
 	} else {
-		drawSprite(LETTER_T, START_GAME_MESSAGE_IND, 240, 160);
-		drawSprite(LETTER_R, START_GAME_MESSAGE_IND+1, 240, 160);
-		drawSprite(LETTER_Y, START_GAME_MESSAGE_IND+2, 240, 160);
-		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+3, 240, 160);
-		drawSprite(LETTER_G, START_GAME_MESSAGE_IND+4, 240, 160);
-		drawSprite(LETTER_A, START_GAME_MESSAGE_IND+5, 240, 160);
-		drawSprite(LETTER_I, START_GAME_MESSAGE_IND+6, 240, 160);
-		drawSprite(LETTER_N, START_GAME_MESSAGE_IND+7, 240, 160);
+		int i;
+		for (i=0; i<8; i++) {
+			removeFromScreen(START_GAME_MESSAGE_IND+i);
+		}
 	}
 }
 
@@ -176,31 +168,42 @@ void initialiseLevelOne(void)
 		bricks[i][0] = -1;
 		bricks[i][1] = -1;
 		brick_health[i] = BRICK_MAX_HEALTH;
-		drawSprite(BRICK_RED, BRICKS_IND + i, 240, 160);
+		removeFromScreen(BRICKS_IND + i);
 	}
+	bricks_eliminated = 0;
 	for (i = 0; i < 27; i++) {
 		int xb = 16*(i%9) + 48; // restart row after 9 bricks
 		int yb = 48 + (i/9)*8; // go second row after 9 bricks
 		bricks[i][0] = xb+8;
 		bricks[i][1] = yb+4;
-		switch (brick_health[i])
-		{
-		case 1:
-			drawSprite(BRICK_RED, BRICKS_IND + i, xb, yb);
-			break;
-
-		case 2:
-			drawSprite(BRICK_YELLOW, BRICKS_IND + i, xb, yb);
-			break;
-
-		case 3:
-			drawSprite(BRICK_GREEN, BRICKS_IND + i, xb, yb);
-			break;
-
-		default:
-			drawSprite(BRICK_BLUE, BRICKS_IND + i, xb, yb);
-			break;
-		}
+		drawBrick(xb, yb, i);
 	}
 	game_state = GAME_STARTING; // unpause game, begin countdown
 }
+
+void initialiseLevelTwo(void) 
+{
+	int i; // general loop variable
+	// platform
+	drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, 144);
+	drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, 144);
+	// ball
+	drawSprite(BALL, BALL_IND, ball_x, ball_y);
+	// brick
+	for (i = 0; i < BRICK_MAX_NUM; i++) {
+		bricks[i][0] = -1;
+		bricks[i][1] = -1;
+		brick_health[i] = BRICK_MAX_HEALTH;
+		removeFromScreen(BRICKS_IND + i);
+	}
+	bricks_eliminated = 0;
+	for (i = 0; i < 45; i++) {
+		int xb = 16*(i%9) + 48; // restart row after 9 bricks
+		int yb = 32 + (i/9)*8; // go second row after 9 bricks
+		bricks[i][0] = xb+8;
+		bricks[i][1] = yb+4;
+		drawBrick(xb, yb, i);
+	}
+	game_state = GAME_STARTING; // unpause game, begin countdown
+}
+
