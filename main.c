@@ -8,8 +8,8 @@
 #include "config.h"
 #include "sprites.h"
 #include "mygbalib.h"
-#include "buttons.h"
 #include "levels.h"
+#include "buttons.h"
 
 // -----------------------------------------------------------------------------
 // Project Entry Point
@@ -27,8 +27,19 @@ void handler(void)
         switch (game_state)
         {
             case GAME_MENU:
+            case GAME_MENU_LEVEL:
                 mainMenu();
                 break;
+
+            case GAME_STARTING: {
+                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
+                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
+                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
+                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+                break;
+            }
 
             case GAME_STARTED:
                 if (bricks_eliminated < 27) {
@@ -37,14 +48,6 @@ void handler(void)
                     game_state = GAME_NEXT;
                 } else if (bricks_eliminated == 72) {
                     game_state = GAME_WON;
-                }
-                break;
-
-            case GAME_ENDING:
-                if (ball_y < 160) {
-                    moveBall();
-                } else {
-                    game_state = GAME_ENDED; 
                 }
                 break;
 
@@ -59,13 +62,12 @@ void handler(void)
                 break;
             }
 
-            case GAME_STARTING: {
-                drawSprite(LETTER_P, GAME_MESSAGE_IND, 240, 160);
-                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 240, 160);
-                drawSprite(LETTER_U, GAME_MESSAGE_IND+2, 240, 160);
-                drawSprite(LETTER_S, GAME_MESSAGE_IND+3, 240, 160);
-                drawSprite(LETTER_E, GAME_MESSAGE_IND+4, 240, 160);
-                drawSprite(LETTER_D, GAME_MESSAGE_IND+5, 240, 160);
+            case GAME_ENDING: {
+                if ((ball_y+8) < 160) {
+                    moveBall();
+                } else {
+                    game_state = GAME_ENDED;
+                }
                 break;
             }
 
@@ -131,7 +133,8 @@ void handler(void)
     {
         switch (game_state)
         {
-        case GAME_MENU: {
+        case GAME_MENU:
+        case GAME_MENU_LEVEL: {
             main_menu_flash = !main_menu_flash;
             break;
         }
@@ -157,6 +160,7 @@ void handler(void)
             drawSprite(NUMBER_ZERO + ones, TIMER_OVERALL_IND + 2, 16, 0);
             timer -= 1;
             powerupA_handler();
+            powerupB_handler();
 			if (timer < 0) {
 				game_state = GAME_OVER;
 			}
@@ -173,7 +177,6 @@ void handler(void)
             level2_timer-=1;
             if (level2_timer < 0) {
                 initialiseLevelTwo();
-                game_state = GAME_STARTED;
                 drawSprite(LETTER_L, GAME_MESSAGE_IND, 240, 160);
                 drawSprite(LETTER_E, GAME_MESSAGE_IND+1, 240, 160);
                 drawSprite(LETTER_V, GAME_MESSAGE_IND+2, 240, 160);
@@ -195,39 +198,13 @@ void handler(void)
 
 int main(void)
 {
-	//////////////////////These stuff probably can remove //////////////////////
-	// Initialize HAMlib
-	// ham_Init();
-
-	// Set background mode
-	// ham_SetBgMode(0);
-
-	// Initialize built-in Text-System
-	// ham_InitText(0);
-
-	// Draw some text
-	// ham_DrawText(1, 1, "Hello World");
-	////////////////////////////////////////////////////////////////////////////
-
     // Set Mode 2
     *(unsigned short *) 0x4000000 = 0x40 | 0x2 | 0x1000;
 
 	////////////////////////////////////////////////////////////////////////////
 	// initialise
 	////////////////////////////////////////////////////////////////////////////
-	fillPalette();
-	fillSprites();
-	int i; // general loop variable
-	// create walls
-	for (i = 0; i < 8; i++) {
-		drawSprite(LEFT_WALL, LEFT_WALL_IND + i, 0, i*16+32);
-		drawSprite(RIGHT_WALL, RIGHT_WALL_IND + i, 224, i*16+32);
-	}
-	for (i = 0; i < 15; i++) {
-		drawSprite(TOP_WALL, TOP_WALL_IND + i, 16*i, 16);
-	}
-	// hearts
-	drawHeart();
+    initialise();
 
     // Set Handler Function for interrupts and enable selected interrupts
     REG_INT = (int)&handler;

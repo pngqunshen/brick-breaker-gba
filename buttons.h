@@ -5,18 +5,79 @@
 #define INPUT                      (KEY_MASK & (~REG_KEYS))
 
 void buttonA() {
-	if (powerupA_cooldown > 0) {
-		// Powerup is on cooldown, do nothing
-		return;
-	}
-	if (!powerupA_active) {
-		powerupA_active = true;
-		step_size *= 2;
-		powerupA_timer = POWERUP_A_DURATION; // set powerup timer
-	}
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL: {
+        int i;
+        for (i=0; i<60; i++) {
+            drawSprite(0,i,240,160);
+        }
+        switch (current_level)
+        {
+        case 1:
+            initialiseLevelOne();
+            break;
+
+        case 2:
+            initialiseLevelTwo(); // change to level 2
+            break;
+        
+        default:
+            break;
+        }
+        game_state = GAME_STARTING;
+        break;
+    }
+
+    case GAME_STARTED: {
+        if (powerupA_cooldown > 0) {
+            // Powerup is on cooldown, do nothing
+            break;
+        }
+        if (!powerupA_active) {
+            powerupA_active = true;
+            step_size *= 2;
+            powerupA_timer = POWERUP_A_DURATION; // set powerup timer
+        }
+        break;
+    }
+
+    case GAME_OVER: {
+        initialise();
+        game_state = GAME_MENU;
+        break;
+    }
+    
+    default:
+        break;
+    }
 }
 
-void buttonB() {}
+void buttonB() {
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL:
+        initialise();
+        game_state = GAME_MENU;
+        break;
+
+    case GAME_STARTED: {
+        if (powerupB_cooldown > 0) {
+            // Powerup is on cooldown, do nothing
+            return;
+        }
+        if (!powerupB_active) {
+            powerupB_active = true;
+            ball_dmg *= 2;
+            powerupB_timer = POWERUP_B_DURATION; // set powerup timer
+        }
+    }
+    
+    default:
+        break;
+    }
+
+}
 void buttonSel() {
     game_state = GAME_NEXT;
 }
@@ -46,8 +107,13 @@ void buttonS() {
         for (i = 0; i<60; i++) {
             drawSprite(0,i,240,160);
         }
-        game_state = GAME_STARTING;
-        initialiseLevelOne();
+        game_state = GAME_MENU_LEVEL;
+        break;
+    }
+
+    case GAME_OVER: {
+        initialise();
+        game_state = GAME_MENU;
         break;
     }
     
@@ -57,33 +123,80 @@ void buttonS() {
 }
 
 void buttonR() {
-    if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
+    switch (game_state)
+    {
+    case GAME_STARTED:
+    case GAME_ENDING: {
         if (platform_x <= PLATFORM_RIGHT_BOUND - step_size) {
             platform_x += step_size;
-            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
-            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
+            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_Y);
+            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_Y);
             if (game_state == GAME_STARTING) {
                 ball_x += PLATFORM_STEP_SIZE;
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
             }
         }
+        break;
+    }
+    
+    default:
+        break;
     }
 }
 void buttonL() {
-    if (game_state == GAME_STARTED || game_state == GAME_ENDING) {
+    switch (game_state)
+    {
+    case GAME_STARTED:
+    case GAME_ENDING: {
         if (platform_x >= PLATFORM_LEFT_BOUND + step_size) {
             platform_x -= step_size;
-            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_HEIGHT);
-            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_HEIGHT);
+            drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, PLATFORM_Y);
+            drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, PLATFORM_Y);
             if (game_state == GAME_STARTING) {
                 ball_x -= PLATFORM_STEP_SIZE;
                 drawSprite(BALL, BALL_IND, ball_x, ball_y);
             }
         }
+        break;
+    }
+    
+    default:
+        break;
     }
 }
-void buttonU() {}
-void buttonD() {}
+void buttonU() 
+{
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL:
+        if (current_level > 1)
+        {
+            current_level--;
+        }
+        
+        break;
+    
+    default:
+        break;
+    }
+}
+
+void buttonD()
+{
+    switch (game_state)
+    {
+    case GAME_MENU_LEVEL:
+        if (current_level < 2)
+        {
+            current_level++;
+        }
+        
+        break;
+    
+    default:
+        break;
+    }
+}
 
 void checkbutton(void)
 {
