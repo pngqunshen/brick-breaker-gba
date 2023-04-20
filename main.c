@@ -192,6 +192,7 @@ void handler(void)
                 for (i=0; i<8; i++) {
                     removeFromScreen(GAME_MESSAGE_IND+i);
                 }
+                removeFromScreen(TIMER_NEXT_LEVEL_IND);
             }
             break;
         }
