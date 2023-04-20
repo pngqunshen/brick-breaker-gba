@@ -187,7 +187,7 @@ void handler(void)
                 timer = GAME_DURATION; // reset timer
                 ball_x = BALL_START_X; // reset horizontal position of ball
                 ball_y = BALL_START_Y; // reset vertical position of ball
-                ball_heading = BALL_START_HEAD; // reset heading for ball movement [-pi,pi) increase clockwise
+                ball_heading = BALL_START_HEAD; // reset heading for ball movement [-180,180) increase clockwise
                 int i;
                 for (i=0; i<8; i++) {
                     removeFromScreen(GAME_MESSAGE_IND+i);

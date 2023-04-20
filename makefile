@@ -16,7 +16,8 @@ PROGNAME=brick-breaker-gba
 #
 # Set a list of files you want to compile
 #
-OFILES +=main.o
+OFILES +=main.o \
+	collision.o
 
 #
 # Set a list of libraries you want to link

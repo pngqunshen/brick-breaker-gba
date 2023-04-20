@@ -26,8 +26,6 @@
 #define PLATFORM_Y 144 // y of platform
 #define PLATFORM_HEIGHT 4 // height of platform
 #define PLATFORM_WIDTH 32 // width of platform
-#define PLATFORM_MAX_DEFLECTION M_PI/6 // maximum additional deflection by hitting end of platform
-#define PLATFORM_MIN_ANGLE M_PI/9 // minimum allowed angle of reflection from platform
 
 // ball config
 #define BALL_UPPER_BOUND 32 // before hitting upper wall
@@ -38,7 +36,7 @@
 #define BALL_RADIUS 3 // ball radius
 #define BALL_START_X 112 // start x position of ball
 #define BALL_START_Y 90 // start y position of ball
-#define BALL_START_HEAD M_PI/2 // start heading of ball
+#define BALL_START_HEAD 90 // start heading of ball
 #define BALL_DAMAGE 1 // damage ball does to brick
 
 // powerup config
@@ -85,7 +83,7 @@ enum GameState
 int platform_x; // position of platform
 int ball_x; // horizontal position of ball
 int ball_y; // vertical position of ball
-double ball_heading; // heading for ball movement [-pi,pi) increase clockwise
+int ball_heading; // heading for ball movement [-180,180) increase clockwise
 
 // powerups
 bool powerupA_active; // flag to indicate whether the powerup is active or not

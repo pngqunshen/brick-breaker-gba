@@ -4,7 +4,7 @@ void initialise(void)
     platform_x = 120; // position of platform
     ball_x = BALL_START_X; // horizontal position of ball
     ball_y = BALL_START_Y; // vertical position of ball
-    ball_heading = BALL_START_HEAD; // heading for ball movement [-pi,pi) increase clockwise
+    ball_heading = BALL_START_HEAD; // heading for ball movement [-180,180) increase clockwise
 
     // powerups
     powerupA_active = false; // flag to indicate whether the powerup is active or not

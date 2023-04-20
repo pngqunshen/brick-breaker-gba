@@ -1,3 +1,19 @@
+// ensure angle a is between [-180, 180)
+extern int limit_angle(int a);
+
+// for defining platform collision at the top
+extern int platform_top_deflection(int x_ball, int x_platform, int heading_ball);
+
+// convert from rad to degree
+int radToDeg(double a) {
+    return (int)a/M_PI*180;
+}
+
+// convert from degree to radians
+double degToRad(int a) {
+    return a/180.0*M_PI;
+}
+
 void fillPalette(void)
 {
     int     i;
@@ -67,17 +83,12 @@ void drawBrick(int x, int y, int i) {
     }
 }
 
-/*
-  ensure angle a is between [-pi, pi)
-*/
-double limit_angle(double a) {
-    if (a >= -M_PI && a < M_PI) {
-        return a;
-    } else if (a < -M_PI) {
-        return limit_angle(a + 2*M_PI);
-    } else {
-        return limit_angle(a - 2*M_PI);
-    }
+void vertCollision() {
+    ball_heading = limit_angle(180 - ball_heading);
+}
+
+void horiCollision() {
+    ball_heading = limit_angle(-ball_heading);
 }
 
 void brickBreak(int i) {
@@ -107,15 +118,15 @@ bool checkCollision(int x0, int y0)
 
     // main boundaries collision
     if (ball_right > BALL_RIGHT_BOUND) {
-        ball_heading = limit_angle(M_PI - ball_heading);
+        vertCollision();
         return true;
     }
     if (ball_left < BALL_LEFT_BOUND) {
-        ball_heading = limit_angle(M_PI - ball_heading);
+        vertCollision();
         return true;
     }
     if (ball_top < BALL_UPPER_BOUND) {
-        ball_heading = limit_angle(-ball_heading);
+        horiCollision();
         return true;
     }
 
@@ -125,18 +136,8 @@ bool checkCollision(int x0, int y0)
         switch (game_state)
         {
         case GAME_STARTED: {
-            if ((xc < platform_x + PLATFORM_WIDTH/2) && (xc >= platform_x - PLATFORM_WIDTH/2)) {
-                double ang_extra = (xc - platform_x) / 16.0 * PLATFORM_MAX_DEFLECTION;
-                double reflection = limit_angle(-ball_heading + ang_extra);
-                if ((reflection < -M_PI + PLATFORM_MIN_ANGLE) || (reflection > M_PI/2)) {
-                    ball_heading = -M_PI + PLATFORM_MIN_ANGLE; // offset slightly so it is not horizontal
-                } else if (reflection > -PLATFORM_MIN_ANGLE) {
-                    ball_heading = -PLATFORM_MIN_ANGLE; // offset slightly so it is not horizontal
-                } else {
-                    ball_heading = reflection;
-                }
-                return true;
-            } else {
+            int new_heading = platform_top_deflection(xc, platform_x, ball_heading);
+            if (new_heading == ball_heading) { // heading didn't change, fall past platform
                 game_state = GAME_ENDING;
             }
             break;
@@ -147,16 +148,16 @@ bool checkCollision(int x0, int y0)
             if (yc > BALL_PLATFORM_BOUND && yc <= (BALL_PLATFORM_BOUND+PLATFORM_HEIGHT)) {
                 if (ball_right >= (platform_x-PLATFORM_WIDTH/2) && ball_right < platform_x) {
                     // if already bouncing away, do nothing, prevent glitch where ball gets stuck
-                    if (ball_heading <= M_PI/2) {
-                        ball_heading = limit_angle(M_PI - ball_heading);
+                    if (ball_heading <= 90) {
+                        vertCollision();
                         return true;
                     }
                 }
                 // collide with right of platform
                 else if (ball_left >= platform_x && ball_left < (platform_x+PLATFORM_WIDTH/2)) {
                     // if already bouncing away, do nothing, prevent glitch where ball gets stuck
-                    if (ball_heading > M_PI/2) {
-                        ball_heading = limit_angle(M_PI - ball_heading);
+                    if (ball_heading > 90) {
+                        vertCollision();
                         return true;
                     }
                 }
@@ -180,7 +181,7 @@ bool checkCollision(int x0, int y0)
                 (xc<(bricks[i][0]+BRICK_LENGTH/2+BRICK_THRESHOLD))) {
             if ((yc >= (bricks[i][1]-BRICK_HEIGHT/2-BALL_RADIUS)) && 
                     (yc < (bricks[i][1]+BRICK_HEIGHT/2+BALL_RADIUS))) {
-                ball_heading = limit_angle(-ball_heading);
+                horiCollision();
                 brickBreak(i);
                 return true;
             }
@@ -190,7 +191,7 @@ bool checkCollision(int x0, int y0)
                 (yc<(bricks[i][1]+BRICK_HEIGHT/2+BRICK_THRESHOLD))) {
             if ((xc >= (bricks[i][0]-BRICK_LENGTH/2-BALL_RADIUS)) && 
                     (xc < (bricks[i][0]+BRICK_LENGTH/2+BALL_RADIUS))) {
-                ball_heading = limit_angle(M_PI - ball_heading);
+                vertCollision();
                 brickBreak(i);
                 return true;
             }
@@ -207,8 +208,8 @@ void moveBall(void)
 {
     int x0 = ball_x;
     int y0 = ball_y;
-    int x1 = x0 + (int)(BALL_STEP_SIZE*cos(ball_heading));
-    int y1 = y0 + (int)(BALL_STEP_SIZE*sin(ball_heading));
+    int x1 = x0 + (int)(BALL_STEP_SIZE*cos(degToRad(ball_heading)));
+    int y1 = y0 + (int)(BALL_STEP_SIZE*sin(degToRad(ball_heading)));
     int dx = abs(x1 - x0);
     int sx = x0 < x1 ? 1 : -1;
     int dy = -abs(y1 - y0);
