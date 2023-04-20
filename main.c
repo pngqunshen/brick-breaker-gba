@@ -41,12 +41,19 @@ void handler(void)
             }
 
             case GAME_STARTED:
-                if (bricks_eliminated < 27) {
-                moveBall();
-                } else if (current_level == 1 && 27) {
-                    game_state = GAME_NEXT;
-                } else if (current_level == 2 && 45) {
-                    game_state = GAME_WON;
+                if (current_level == 1) {
+                    if (bricks_eliminated < 27) {
+                        moveBall();
+                    } else {
+                        game_state = GAME_NEXT;
+                    }
+                }
+                else if (current_level == 2) {
+                    if (bricks_eliminated < 45) {
+                        moveBall();    
+                    } else {
+                        game_state = GAME_WON;
+                    }
                 }
                 break;
 
