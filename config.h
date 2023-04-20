@@ -105,7 +105,7 @@ int next_level_timer; // time taken before next level kicks in
 int num_life; // number of life left
 enum GameState game_state; // track status of game
 bool main_menu_flash; // flash the press start message
-int bricks_eliminated; // counter for number of bricks eliminated
+int total_bricks; // counter for number of total number of bricks left
 int current_level; // current level of game
 
 // bricks

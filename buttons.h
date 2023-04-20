@@ -42,7 +42,8 @@ void buttonA() {
         break;
     }
 
-    case GAME_OVER: {
+    case GAME_OVER:
+    case GAME_WON: {
         initialise();
         game_state = GAME_MENU;
         break;
@@ -113,7 +114,8 @@ void buttonS() {
         break;
     }
 
-    case GAME_OVER: {
+    case GAME_OVER:
+    case GAME_WON: {
         initialise();
         game_state = GAME_MENU;
         break;

@@ -6,7 +6,7 @@ void powerupA_handler() {
         drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_A_IND + 1, 48, 0);
         powerupA_timer--;
         drawSprite(POWERUP_A, POWERUP_IND, 32, 0);
-        if (powerupA_timer <= 0) {
+        if (powerupA_timer < 0) {
             step_size /= 2; // revert platform step size
             powerupA_active = false;
             powerupA_cooldown = POWERUP_A_COOLDOWN_DURATION; // set cooldown
@@ -35,7 +35,7 @@ void powerupB_handler() {
         drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_B_IND + 1, 80, 0);
         powerupB_timer--;
         drawSprite(POWERUP_B, POWERUPB_IND, 64, 0);
-        if (powerupB_timer <= 0) {
+        if (powerupB_timer < 0) {
             ball_dmg = 1; // revert ball damage to 1
             powerupB_active = false;
             powerupB_cooldown = POWERUP_B_COOLDOWN_DURATION; // set cooldown

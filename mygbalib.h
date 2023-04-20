@@ -96,7 +96,7 @@ void brickBreak(int i) {
     int xb = bricks[i][0]-BRICK_LENGTH/2;
     int yb = bricks[i][1]-BRICK_HEIGHT/2;
     if (brick_health[i] <=0)
-        bricks_eliminated += 1;
+        total_bricks -= 1;
     drawBrick(xb, yb, i);
 }
 

@@ -26,7 +26,7 @@ void initialise(void)
     num_life = MAX_NUM_LIFE; // number of life left
     game_state = GAME_MENU; // track status of game
     main_menu_flash = true; // flash the press start message
-    bricks_eliminated = 0; // counter for number of bricks eliminated
+    total_bricks = 0; // counter for number of total number of bricks left
     current_level = 1; // current level of game
 
     fillPalette();
@@ -155,6 +155,34 @@ void gameOver(void)
     }
 }
 
+void gameWon(void)
+{
+    drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+    drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+    drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+    drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+    drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 128, 72);
+    drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
+    drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
+
+    if (main_menu_flash) {
+        drawSprite(LETTER_P, BRICKS_IND, 84, 104);
+        drawSprite(LETTER_L, BRICKS_IND+1, 92, 104);
+        drawSprite(LETTER_A, BRICKS_IND+2, 100, 104);
+        drawSprite(LETTER_Y, BRICKS_IND+3, 108, 104);
+        drawSprite(LETTER_A, BRICKS_IND+4, 124, 104);
+        drawSprite(LETTER_G, BRICKS_IND+5, 132, 104);
+        drawSprite(LETTER_A, BRICKS_IND+6, 140, 104);
+        drawSprite(LETTER_I, BRICKS_IND+7, 148, 104);
+        drawSprite(LETTER_N, BRICKS_IND+8, 156, 104);
+    } else {
+        int i;
+        for (i=0; i<9; i++) {
+            removeFromScreen(BRICKS_IND+i);
+        }
+    }
+}
+
 void initialiseLevelOne(void) 
 {
     int i; // general loop variable
@@ -170,8 +198,8 @@ void initialiseLevelOne(void)
         brick_health[i] = BRICK_MAX_HEALTH;
         removeFromScreen(BRICKS_IND + i);
     }
-    bricks_eliminated = 0;
-    for (i = 0; i < 27; i++) {
+    total_bricks = 18;
+    for (i = 0; i < 18; i++) {
         int xb = 16*(i%9) + 48; // restart row after 9 bricks
         int yb = 48 + (i/9)*8; // go second row after 9 bricks
         bricks[i][0] = xb+8;
@@ -196,10 +224,17 @@ void initialiseLevelTwo(void)
         brick_health[i] = BRICK_MAX_HEALTH;
         removeFromScreen(BRICKS_IND + i);
     }
-    bricks_eliminated = 0;
-    for (i = 0; i < 45; i++) {
-        int xb = 16*(i%9) + 48; // restart row after 9 bricks
-        int yb = 32 + (i/9)*8; // go second row after 9 bricks
+    total_bricks = 30;
+    for (i = 0; i < 15; i++) {
+        int xb = 16*(i%3) + 48; // restart row after 3 bricks
+        int yb = 48 + (i/3)*8; // go next row after 3 bricks
+        bricks[i][0] = xb+8;
+        bricks[i][1] = yb+4;
+        drawBrick(xb, yb, i);
+    }
+    for (i = 15; i < 30; i++) {
+        int xb = 164*(i%3) + 48; // restart row after 3 bricks
+        int yb = 48 + (i/3)*8; // go second row after 3 bricks
         bricks[i][0] = xb+8;
         bricks[i][1] = yb+4;
         drawBrick(xb, yb, i);

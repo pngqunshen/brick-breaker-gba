@@ -41,19 +41,10 @@ void handler(void)
             }
 
             case GAME_STARTED:
-                if (current_level == 1) {
-                    if (bricks_eliminated < 27) {
-                        moveBall();
-                    } else {
-                        game_state = GAME_NEXT;
-                    }
-                }
-                else if (current_level == 2) {
-                    if (bricks_eliminated < 45) {
-                        moveBall();    
-                    } else {
-                        game_state = GAME_WON;
-                    }
+                if (total_bricks > 0) {
+                    moveBall();
+                } else {
+                    game_state = GAME_NEXT;
                 }
                 break;
 
@@ -108,25 +99,12 @@ void handler(void)
             }
 
             case GAME_OVER: {
-                drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
-                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
-                drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
-                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
-                drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
-                drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
-                drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
-                drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+                gameOver();
                 break;
             }
             
             case GAME_WON: {
-                drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
-                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
-                drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
-                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
-                drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 128, 72);
-                drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
-                drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
+                gameWon();
                 break;
             }
             default:
@@ -182,12 +160,12 @@ void handler(void)
             drawSprite(NUMBER_ZERO + next_level_timer, TIMER_NEXT_LEVEL_IND, 116, 60);
             next_level_timer -=1 ;
             if (next_level_timer < 0) {
+                int num_hearts = num_life; // temporarily store so initalise does not reset
+                initialise();
+                num_life = num_hearts;
+                drawHeart();
                 initialiseLevelTwo();
                 current_level = 2;
-                timer = GAME_DURATION; // reset timer
-                ball_x = BALL_START_X; // reset horizontal position of ball
-                ball_y = BALL_START_Y; // reset vertical position of ball
-                ball_heading = BALL_START_HEAD; // reset heading for ball movement [-180,180) increase clockwise
                 int i;
                 for (i=0; i<8; i++) {
                     removeFromScreen(GAME_MESSAGE_IND+i);
