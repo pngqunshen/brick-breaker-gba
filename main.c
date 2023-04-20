@@ -43,9 +43,9 @@ void handler(void)
             case GAME_STARTED:
                 if (bricks_eliminated < 27) {
                 moveBall();
-                } else if (bricks_eliminated == 27) {
+                } else if (current_level == 1 && 27) {
                     game_state = GAME_NEXT;
-                } else if (bricks_eliminated == 72) {
+                } else if (current_level == 2 && 45) {
                     game_state = GAME_WON;
                 }
                 break;
@@ -176,6 +176,11 @@ void handler(void)
             next_level_timer -=1 ;
             if (next_level_timer < 0) {
                 initialiseLevelTwo();
+                current_level = 2;
+	            timer = GAME_DURATION; // reset timer
+	            ball_x = BALL_START_X; // reset horizontal position of ball
+	            ball_y = BALL_START_Y; // reset vertical position of ball
+	            ball_heading = BALL_START_HEAD; // reset heading for ball movement [-pi,pi) increase clockwise
                 int i;
                 for (i=0; i<8; i++) {
                     removeFromScreen(GAME_MESSAGE_IND+i);
