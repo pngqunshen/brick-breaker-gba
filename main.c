@@ -225,6 +225,8 @@ int main(void)
     REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
     REG_TM1D =	64715;		// 0.05 seconds for each clock cycle
     REG_TM1CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
+    REG_TM2D =	54060;		// 0.7 seconds for each clock cycle
+    REG_TM2CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
 
 	// Infinite loop
 	for(;;);

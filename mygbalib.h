@@ -218,7 +218,14 @@ void moveBall(void)
         if (checkCollision(x0, y0)) {
             break;
         }
-        drawSprite(BALL, BALL_IND, ball_x, ball_y);
+        if (powerupB_active) { //if powerB is active, ball cycles through 4 sprites
+            drawSprite(B_Flash_1+B_blink_state, BALL_IND, ball_x, ball_y);
+            B_blink_state++;
+            B_blink_state %= 4;           
+        }
+        else { //draw normal ball
+            drawSprite(BALL, BALL_IND, ball_x, ball_y);
+        }
         ball_x = x0;
         ball_y = y0;
         if (x0 == x1 && y0 == y1) {
