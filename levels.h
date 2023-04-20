@@ -27,6 +27,7 @@ void initialise(void)
     powerupB_timer = 0; // timer for powerupA duration
     powerupB_cooldown = 0; // timer for powerupA cooldown
     ball_dmg = BALL_DAMAGE; // step size to move platform
+    int B_blink_state = 0; // the #sprite the ball is drawn as while powerB is active
 
     // timer
     timer = GAME_DURATION; // overall timer
@@ -229,7 +230,7 @@ void initialiseLevelOne(void)
         brick_health[i] = BRICK_MAX_HEALTH;
         removeFromScreen(BRICKS_IND + i);
     }
-    total_bricks = 1;
+    total_bricks = 18;
     for (i = 0; i < 18; i++) {
         int xb = 16*(i%9) + 48; // restart row after 9 bricks
         int yb = 48 + (i/9)*8; // go second row after 9 bricks
@@ -260,17 +261,17 @@ void initialiseLevelTwo(void)
         brick_health[i] = BRICK_MAX_HEALTH;
         removeFromScreen(BRICKS_IND + i);
     }
-    total_bricks = 4;
-    for (i = 0; i < 2; i++) {
-        int xb = 16*(i%2) + 48; // restart row after 3 bricks
+    total_bricks = 30;
+    for (i = 0; i < 15; i++) {
+        int xb = 16*(i%3) + 48; // restart row after 3 bricks
         int yb = 48 + (i/3)*8; // go next row after 3 bricks
         bricks[i][0] = xb+8;
         bricks[i][1] = yb+4;
         drawBrick(xb, yb, i);
     }
-    for (i = 2; i < 4; i++) {
-        int xb = 16*(i%2) + 148; // restart row after 3 bricks
-        int yb = 48 + ((i-2)/2)*8; // go second row after 3 bricks
+    for (i = 15; i < 30; i++) {
+        int xb = 16*(i%3) + 148; // restart row after 3 bricks
+        int yb = 48 + ((i-15)/3)*8; // go next row after 3 bricks
         bricks[i][0] = xb+8;
         bricks[i][1] = yb+4;
         drawBrick(xb, yb, i);

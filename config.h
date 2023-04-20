@@ -93,7 +93,8 @@ int step_size; // step size to move platform
 bool powerupB_active; // flag to indicate whether the powerup is active or not
 int powerupB_timer; // timer for powerupA duration
 int powerupB_cooldown; // timer for powerupA cooldown
-int ball_dmg; // step size to move platform
+int ball_dmg; // ball damage to bricks
+int B_blink_state; // the #sprite the ball is drawn as while powerB is active
 
 // timer
 int timer; // overall timer

@@ -7,8 +7,8 @@ void powerupA_handler() {
         // powerup timer handling
         int ones = powerupA_timer % 10;
         int tens = (powerupA_timer / 10) % 10;
-        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_A_IND, 56, 0);
-        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_A_IND + 1, 48, 0);
+        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_A_IND, 56, 0); // draw remaining time at ones position
+        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_A_IND + 1, 48, 0); // draw remaining time at tens position
         powerupA_timer--;
         drawSprite(POWERUP_A, POWERUP_IND, 32, 0);
         if (powerupA_timer < 0) {
@@ -42,8 +42,8 @@ void powerupB_handler() {
         // powerup timer handling
         int ones = powerupB_timer % 10;
         int tens = (powerupB_timer / 10) % 10;
-        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_B_IND, 88, 0);
-        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_B_IND + 1, 80, 0);
+        drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_B_IND, 88, 0); // draw remaining time at ones position
+        drawSprite(NUMBER_ZERO + tens, TIMER_POWERUP_B_IND + 1, 80, 0); // draw remaining time at tens position
         powerupB_timer--;
         drawSprite(POWERUP_B, POWERUPB_IND, 64, 0);
         if (powerupB_timer < 0) {

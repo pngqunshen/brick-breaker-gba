@@ -26,6 +26,14 @@ void handler(void)
 
     // handle game state logic
 
+    // timer2 interrupt: 0.25 seconds, 4 hz
+    if ((REG_IF & INT_TIMER2) == INT_TIMER2)
+    {
+        // set the next state for ball blinking for powerup B
+        B_blink_state++;
+        B_blink_state %= 4;
+    }
+
     // timer1 interrupt: 0.05 seconds, 20 hz
     if ((REG_IF & INT_TIMER1) == INT_TIMER1)
     {
@@ -178,6 +186,7 @@ void handler(void)
             drawSprite(NUMBER_ZERO + next_level_timer, TIMER_NEXT_LEVEL_IND, 116, 60);
             next_level_timer -=1 ;
             if (next_level_timer < 0) {
+                initialise();
                 initialiseLevelTwo();
                 current_level = 2;
                 int i;
@@ -212,6 +221,7 @@ int main(void)
     REG_INT = (int)&handler;
     REG_IE |= INT_TIMER0;	// timer 0, 1 second interval
     REG_IE |= INT_TIMER1;	// timer 1, 0.05 second interval
+    REG_IE |= INT_TIMER2;	// timer 1, 0.05 second interval
     REG_IME = 0x1;		// Enable interrupt handling
 
     // Set Timer Mode
@@ -219,6 +229,8 @@ int main(void)
     REG_TM0CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
     REG_TM1D =	64715;		// 0.05 seconds for each clock cycle
     REG_TM1CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
+    REG_TM2D =	61438;		// 0.25 seconds for each clock cycle
+    REG_TM2CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
 
     // Infinite loop
     for(;;);
