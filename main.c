@@ -90,9 +90,9 @@ void handler(void)
                 } else {
                     num_life -= 1;
                     drawHeart();
-					game_state = GAME_OVER;
-				}
-				break;
+                    game_state = GAME_OVER;
+                }
+                break;
             }
 
             case GAME_NEXT: {
@@ -107,26 +107,26 @@ void handler(void)
                 break;
             }
 
-			case GAME_OVER: {
-				drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
-				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
-				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
-				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
-				drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
-				drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
-				drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
-				drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+            case GAME_OVER: {
+                drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+                drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+                drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
+                drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
+                drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
                 break;
-			}
+            }
             
             case GAME_WON: {
                 drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
-				drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
-				drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
-				drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
-				drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 128, 72);
-				drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
-				drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
+                drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
+                drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
+                drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
+                drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 128, 72);
+                drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
+                drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
                 break;
             }
             default:
@@ -167,9 +167,9 @@ void handler(void)
             timer -= 1;
             powerupA_handler();
             powerupB_handler();
-			if (timer < 0) {
-				game_state = GAME_OVER;
-			}
+            if (timer < 0) {
+                game_state = GAME_OVER;
+            }
             break;
         }
         
@@ -184,10 +184,10 @@ void handler(void)
             if (next_level_timer < 0) {
                 initialiseLevelTwo();
                 current_level = 2;
-	            timer = GAME_DURATION; // reset timer
-	            ball_x = BALL_START_X; // reset horizontal position of ball
-	            ball_y = BALL_START_Y; // reset vertical position of ball
-	            ball_heading = BALL_START_HEAD; // reset heading for ball movement [-pi,pi) increase clockwise
+                timer = GAME_DURATION; // reset timer
+                ball_x = BALL_START_X; // reset horizontal position of ball
+                ball_y = BALL_START_Y; // reset vertical position of ball
+                ball_heading = BALL_START_HEAD; // reset heading for ball movement [-pi,pi) increase clockwise
                 int i;
                 for (i=0; i<8; i++) {
                     removeFromScreen(GAME_MESSAGE_IND+i);
@@ -208,9 +208,9 @@ int main(void)
     // Set Mode 2
     *(unsigned short *) 0x4000000 = 0x40 | 0x2 | 0x1000;
 
-	////////////////////////////////////////////////////////////////////////////
-	// initialise
-	////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    // initialise
+    ////////////////////////////////////////////////////////////////////////////
     initialise();
 
     // Set Handler Function for interrupts and enable selected interrupts
@@ -225,8 +225,8 @@ int main(void)
     REG_TM1D =	64715;		// 0.05 seconds for each clock cycle
     REG_TM1CNT |= TIMER_FREQUENCY_1024 | TIMER_ENABLE | TIMER_INTERRUPTS;
 
-	// Infinite loop
-	for(;;);
-	
-	return 0;
+    // Infinite loop
+    for(;;);
+    
+    return 0;
 }

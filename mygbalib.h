@@ -2,7 +2,7 @@ void fillPalette(void)
 {
     int     i;
 
-	// Fill the palette in GBA memory
+    // Fill the palette in GBA memory
     for (i = 0; i < NCOLS; i++)
         spritePal[i] = palette[i];
 }
@@ -10,7 +10,7 @@ void fillPalette(void)
 
 void drawSprite(int numb, int N, int x, int y)
 {
-	// Same as CA2, make specific sprite (based on its name/numb) appear on screen, as slide number N (each sprite needs a different, arbitrary, N >= 0)
+    // Same as CA2, make specific sprite (based on its name/numb) appear on screen, as slide number N (each sprite needs a different, arbitrary, N >= 0)
     *(unsigned short *)(0x7000000 + 8*N) = y | 0x2000;
     *(unsigned short *)(0x7000002 + 8*N) = x | 0x4000;
     *(unsigned short *)(0x7000004 + 8*N) = numb*8;
@@ -20,11 +20,11 @@ void fillSprites(void)
 {
     int     i;
 
-	// Load all sprites in GBA memory
+    // Load all sprites in GBA memory
     for (i = 0; i < 128*16*16; i++)
         spriteData[i] = (sprites[i*2+1] << 8) + sprites[i*2];
 
-	// draw all sprites on screen, but all of them outside of the screen (starting at position (240,160) the bottom right corner of the GBA screen)
+    // draw all sprites on screen, but all of them outside of the screen (starting at position (240,160) the bottom right corner of the GBA screen)
     for(i = 0; i < 128; i++)
         drawSprite(0, i, SCREEN_WIDTH,SCREEN_HEIGHT);
 }
@@ -36,12 +36,12 @@ void removeFromScreen(int i) {
 void drawHeart() {
     int i;
     for (i = 0; i < MAX_NUM_LIFE; i++) {
-		if (i < num_life) {
-			drawSprite(HEART, LIFE_IND + i, 224 - 16*i, 0);
-		} else {
-			drawSprite(EMPTY_HEART, LIFE_IND + i, 224 - 16*i, 0);
-		}
-	}
+        if (i < num_life) {
+            drawSprite(HEART, LIFE_IND + i, 224 - 16*i, 0);
+        } else {
+            drawSprite(EMPTY_HEART, LIFE_IND + i, 224 - 16*i, 0);
+        }
+    }
 }
 
 void drawBrick(int x, int y, int i) {
@@ -83,7 +83,7 @@ double limit_angle(double a) {
 void brickBreak(int i) {
     brick_health[i] -= ball_dmg;
     int xb = bricks[i][0]-BRICK_LENGTH/2;
-	int yb = bricks[i][1]-BRICK_HEIGHT/2;
+    int yb = bricks[i][1]-BRICK_HEIGHT/2;
     if (brick_health[i] <=0)
         bricks_eliminated += 1;
     drawBrick(xb, yb, i);
