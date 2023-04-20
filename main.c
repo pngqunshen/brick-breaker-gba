@@ -16,11 +16,17 @@
 // Project Entry Point
 // -----------------------------------------------------------------------------
 
+/*
+  general handler that handles all interrupts
+  mainly deals with timer interrupts
+*/
 void handler(void) 
 {
     REG_IME = 0x00; // Stop all other interrupt handling, while we handle this current one
 
     // handle game state logic
+
+    // timer1 interrupt: 0.05 seconds, 20 hz
     if ((REG_IF & INT_TIMER1) == INT_TIMER1)
     {
         checkbutton(); // button update
@@ -34,6 +40,7 @@ void handler(void)
 
             case GAME_STARTING: {
                 int i;
+                // remove pause message
                 for (i=0; i<6; i++) {
                     removeFromScreen(GAME_MESSAGE_IND+i);
                 }
@@ -41,14 +48,18 @@ void handler(void)
             }
 
             case GAME_STARTED:
+                // check if can go next level/game won, else move
                 if (total_bricks > 0) {
                     moveBall();
-                } else {
+                } else if (current_level < 2) {
                     game_state = GAME_NEXT;
+                } else {
+                    game_state = GAME_WON;
                 }
                 break;
 
             case GAME_PAUSED: {
+                // draw pause message
                 removeFromScreen(TIMER_START_IND);
                 drawSprite(LETTER_P, GAME_MESSAGE_IND, 96, 72);
                 drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 104, 72);
@@ -60,6 +71,7 @@ void handler(void)
             }
 
             case GAME_ENDING: {
+                // allow falling animation to complete
                 if ((ball_y+8) < SCREEN_HEIGHT) {
                     moveBall();
                 } else {
@@ -69,6 +81,7 @@ void handler(void)
             }
 
             case GAME_ENDED: {
+                // check if there is life left, if so continue, else gameover
                 if (num_life > 1) {
                     num_life -= 1;
                     drawHeart();
@@ -87,6 +100,7 @@ void handler(void)
             }
 
             case GAME_NEXT: {
+                // win currrent level message
                 drawSprite(LETTER_L, GAME_MESSAGE_IND, 84, 72);
                 drawSprite(LETTER_E, GAME_MESSAGE_IND+1, 92, 72);
                 drawSprite(LETTER_V, GAME_MESSAGE_IND+2, 100, 72);
@@ -95,6 +109,8 @@ void handler(void)
                 drawSprite(LETTER_W, GAME_MESSAGE_IND+5, 132, 72);
                 drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 140, 72);
                 drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 148, 72);
+                // move ball out of screen so it does not block message
+                drawSprite(BALL, BALL_IND, SCREEN_WIDTH, SCREEN_HEIGHT);
                 break;
             }
 
@@ -112,13 +128,15 @@ void handler(void)
         }
     }
 
-    // timer
+    // timer0 interrupt: 1 second, 1 hz
     if ((REG_IF & INT_TIMER0) == INT_TIMER0)
     {
         switch (game_state)
         {
         case GAME_MENU:
-        case GAME_MENU_LEVEL: {
+        case GAME_MENU_LEVEL: 
+        case GAME_OVER: 
+        case GAME_WON: {
             main_menu_flash = !main_menu_flash;
             break;
         }
@@ -160,10 +178,6 @@ void handler(void)
             drawSprite(NUMBER_ZERO + next_level_timer, TIMER_NEXT_LEVEL_IND, 116, 60);
             next_level_timer -=1 ;
             if (next_level_timer < 0) {
-                int num_hearts = num_life; // temporarily store so initalise does not reset
-                initialise();
-                num_life = num_hearts;
-                drawHeart();
                 initialiseLevelTwo();
                 current_level = 2;
                 int i;
@@ -190,6 +204,8 @@ int main(void)
     ////////////////////////////////////////////////////////////////////////////
     // initialise
     ////////////////////////////////////////////////////////////////////////////
+    fillPalette();
+    fillSprites();
     initialise();
 
     // Set Handler Function for interrupts and enable selected interrupts

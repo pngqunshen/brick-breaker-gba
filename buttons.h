@@ -45,7 +45,6 @@ void buttonA() {
     case GAME_OVER:
     case GAME_WON: {
         initialise();
-        game_state = GAME_MENU;
         break;
     }
     
@@ -59,7 +58,6 @@ void buttonB() {
     {
     case GAME_MENU_LEVEL:
         initialise();
-        game_state = GAME_MENU;
         break;
 
     case GAME_STARTED: {
@@ -117,7 +115,6 @@ void buttonS() {
     case GAME_OVER:
     case GAME_WON: {
         initialise();
-        game_state = GAME_MENU;
         break;
     }
     

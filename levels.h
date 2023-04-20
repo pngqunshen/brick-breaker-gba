@@ -1,5 +1,17 @@
+/*
+  initialising sequence for the game, called at the start and when game restarts
+  intialise key parameters and draw main boundaries
+*/
 void initialise(void)
 {
+    int i; // general loop variable
+
+    // move everything out of screen
+    for (i = 0; i < 128; i++)
+    {
+        removeFromScreen(i);
+    }
+    
     // game coordinates
     platform_x = 120; // position of platform
     ball_x = BALL_START_X; // horizontal position of ball
@@ -29,9 +41,6 @@ void initialise(void)
     total_bricks = 0; // counter for number of total number of bricks left
     current_level = 1; // current level of game
 
-    fillPalette();
-    fillSprites();
-    int i; // general loop variable
     // create walls
     for (i = 0; i < 8; i++) {
         drawSprite(LEFT_WALL, LEFT_WALL_IND + i, 0, i*16+32);
@@ -44,7 +53,11 @@ void initialise(void)
     drawHeart();
 }
 
+/*
+  handles main menu display layout
+*/
 void mainMenu(void) {
+    // draw game title: brick breaker
     drawSprite(LETTER_B, START_GAME_MESSAGE_IND, 68, 60);
     drawSprite(LETTER_R, START_GAME_MESSAGE_IND+1, 76, 60);
     drawSprite(LETTER_I, START_GAME_MESSAGE_IND+2, 84, 60);
@@ -61,6 +74,7 @@ void mainMenu(void) {
     switch (game_state)
     {
     case GAME_MENU: {
+        // flashes the words every second: "press start"
         if (main_menu_flash) {
             drawSprite(LETTER_P, START_GAME_MESSAGE_IND+12, 76, 92);
             drawSprite(LETTER_R, START_GAME_MESSAGE_IND+13, 84, 92);
@@ -82,6 +96,7 @@ void mainMenu(void) {
     }
 
     case GAME_MENU_LEVEL: {
+        // draw the words "level1" and "level2"
         drawSprite(LETTER_L, START_GAME_MESSAGE_IND+12, 92, 92);
         drawSprite(LETTER_E, START_GAME_MESSAGE_IND+13, 100, 92);
         drawSprite(LETTER_V, START_GAME_MESSAGE_IND+14, 108, 92);
@@ -99,6 +114,7 @@ void mainMenu(void) {
         switch (current_level)
         {
         case 1: {
+            // flash the cursor at level1
             if (main_menu_flash) {
                 drawSprite(BALL, START_GAME_MESSAGE_IND+24, 148, 92);
             } else {
@@ -108,6 +124,7 @@ void mainMenu(void) {
         }
 
         case 2: {
+            // flash the cursor at level2
             if (main_menu_flash) {
                 drawSprite(BALL, START_GAME_MESSAGE_IND+24, 148, 108);
             } else {
@@ -127,36 +144,45 @@ void mainMenu(void) {
     }
 }
 
+/*
+  handles game over display layout
+*/
 void gameOver(void)
 {
-    drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
-    drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
-    drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
-    drawSprite(LETTER_E, GAME_MESSAGE_IND+3, 112, 72);
-    drawSprite(LETTER_O, GAME_MESSAGE_IND+4, 120, 72);
-    drawSprite(LETTER_V, GAME_MESSAGE_IND+5, 128, 72);
-    drawSprite(LETTER_E, GAME_MESSAGE_IND+6, 136, 72);
-    drawSprite(LETTER_R, GAME_MESSAGE_IND+7, 144, 72);
+    // draw the words "gameover"
+    drawSprite(LETTER_G, START_GAME_MESSAGE_IND, 88, 72);
+    drawSprite(LETTER_A, START_GAME_MESSAGE_IND+1, 96, 72);
+    drawSprite(LETTER_M, START_GAME_MESSAGE_IND+2, 104, 72);
+    drawSprite(LETTER_E, START_GAME_MESSAGE_IND+3, 112, 72);
+    drawSprite(LETTER_O, START_GAME_MESSAGE_IND+4, 120, 72);
+    drawSprite(LETTER_V, START_GAME_MESSAGE_IND+5, 128, 72);
+    drawSprite(LETTER_E, START_GAME_MESSAGE_IND+6, 136, 72);
+    drawSprite(LETTER_R, START_GAME_MESSAGE_IND+7, 144, 72);
 
+    // flash the words "try again"
     if (main_menu_flash) {
-        drawSprite(LETTER_T, START_GAME_MESSAGE_IND, 84, 104);
-        drawSprite(LETTER_R, START_GAME_MESSAGE_IND+1, 92, 104);
-        drawSprite(LETTER_Y, START_GAME_MESSAGE_IND+2, 100, 104);
-        drawSprite(LETTER_A, START_GAME_MESSAGE_IND+3, 116, 104);
-        drawSprite(LETTER_G, START_GAME_MESSAGE_IND+4, 124, 104);
-        drawSprite(LETTER_A, START_GAME_MESSAGE_IND+5, 132, 104);
-        drawSprite(LETTER_I, START_GAME_MESSAGE_IND+6, 140, 104);
-        drawSprite(LETTER_N, START_GAME_MESSAGE_IND+7, 148, 104);
+        drawSprite(LETTER_T, GAME_MESSAGE_IND, 84, 104);
+        drawSprite(LETTER_R, GAME_MESSAGE_IND+1, 92, 104);
+        drawSprite(LETTER_Y, GAME_MESSAGE_IND+2, 100, 104);
+        drawSprite(LETTER_A, GAME_MESSAGE_IND+3, 116, 104);
+        drawSprite(LETTER_G, GAME_MESSAGE_IND+4, 124, 104);
+        drawSprite(LETTER_A, GAME_MESSAGE_IND+5, 132, 104);
+        drawSprite(LETTER_I, GAME_MESSAGE_IND+6, 140, 104);
+        drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 148, 104);
     } else {
         int i;
         for (i=0; i<8; i++) {
-            removeFromScreen(START_GAME_MESSAGE_IND+i);
+            removeFromScreen(GAME_MESSAGE_IND+i);
         }
     }
 }
 
+/*
+  handles game won display layout
+*/
 void gameWon(void)
 {
+    // draw the words "game won"
     drawSprite(LETTER_G, GAME_MESSAGE_IND, 88, 72);
     drawSprite(LETTER_A, GAME_MESSAGE_IND+1, 96, 72);
     drawSprite(LETTER_M, GAME_MESSAGE_IND+2, 104, 72);
@@ -165,24 +191,29 @@ void gameWon(void)
     drawSprite(LETTER_O, GAME_MESSAGE_IND+6, 136, 72);
     drawSprite(LETTER_N, GAME_MESSAGE_IND+7, 144, 72);
 
+    // flash the words "play again"
     if (main_menu_flash) {
-        drawSprite(LETTER_P, BRICKS_IND, 84, 104);
-        drawSprite(LETTER_L, BRICKS_IND+1, 92, 104);
-        drawSprite(LETTER_A, BRICKS_IND+2, 100, 104);
-        drawSprite(LETTER_Y, BRICKS_IND+3, 108, 104);
-        drawSprite(LETTER_A, BRICKS_IND+4, 124, 104);
-        drawSprite(LETTER_G, BRICKS_IND+5, 132, 104);
-        drawSprite(LETTER_A, BRICKS_IND+6, 140, 104);
-        drawSprite(LETTER_I, BRICKS_IND+7, 148, 104);
-        drawSprite(LETTER_N, BRICKS_IND+8, 156, 104);
+        drawSprite(LETTER_P, START_GAME_MESSAGE_IND, 80, 104);
+        drawSprite(LETTER_L, START_GAME_MESSAGE_IND+1, 88, 104);
+        drawSprite(LETTER_A, START_GAME_MESSAGE_IND+2, 96, 104);
+        drawSprite(LETTER_Y, START_GAME_MESSAGE_IND+3, 104, 104);
+        drawSprite(LETTER_A, START_GAME_MESSAGE_IND+4, 120, 104);
+        drawSprite(LETTER_G, START_GAME_MESSAGE_IND+5, 128, 104);
+        drawSprite(LETTER_A, START_GAME_MESSAGE_IND+6, 136, 104);
+        drawSprite(LETTER_I, START_GAME_MESSAGE_IND+7, 144, 104);
+        drawSprite(LETTER_N, START_GAME_MESSAGE_IND+8, 152, 104);
     } else {
         int i;
         for (i=0; i<9; i++) {
-            removeFromScreen(BRICKS_IND+i);
+            removeFromScreen(START_GAME_MESSAGE_IND+i);
         }
     }
 }
 
+/*
+  initialising sequence for level 1
+  draw the bricks and update associated parameters
+*/
 void initialiseLevelOne(void) 
 {
     int i; // general loop variable
@@ -198,7 +229,7 @@ void initialiseLevelOne(void)
         brick_health[i] = BRICK_MAX_HEALTH;
         removeFromScreen(BRICKS_IND + i);
     }
-    total_bricks = 18;
+    total_bricks = 1;
     for (i = 0; i < 18; i++) {
         int xb = 16*(i%9) + 48; // restart row after 9 bricks
         int yb = 48 + (i/9)*8; // go second row after 9 bricks
@@ -206,9 +237,14 @@ void initialiseLevelOne(void)
         bricks[i][1] = yb+4;
         drawBrick(xb, yb, i);
     }
+    start_timer = GAME_START_COUNTDOWN;
     game_state = GAME_STARTING; // unpause game, begin countdown
 }
 
+/*
+  initialising sequence for level 1
+  draw the bricks and update associated parameters
+*/
 void initialiseLevelTwo(void) 
 {
     int i; // general loop variable
@@ -224,21 +260,22 @@ void initialiseLevelTwo(void)
         brick_health[i] = BRICK_MAX_HEALTH;
         removeFromScreen(BRICKS_IND + i);
     }
-    total_bricks = 30;
-    for (i = 0; i < 15; i++) {
-        int xb = 16*(i%3) + 48; // restart row after 3 bricks
+    total_bricks = 4;
+    for (i = 0; i < 2; i++) {
+        int xb = 16*(i%2) + 48; // restart row after 3 bricks
         int yb = 48 + (i/3)*8; // go next row after 3 bricks
         bricks[i][0] = xb+8;
         bricks[i][1] = yb+4;
         drawBrick(xb, yb, i);
     }
-    for (i = 15; i < 30; i++) {
-        int xb = 164*(i%3) + 48; // restart row after 3 bricks
-        int yb = 48 + (i/3)*8; // go second row after 3 bricks
+    for (i = 2; i < 4; i++) {
+        int xb = 16*(i%2) + 148; // restart row after 3 bricks
+        int yb = 48 + ((i-2)/2)*8; // go second row after 3 bricks
         bricks[i][0] = xb+8;
         bricks[i][1] = yb+4;
         drawBrick(xb, yb, i);
     }
+    start_timer = GAME_START_COUNTDOWN;
     game_state = GAME_STARTING; // unpause game, begin countdown
 }
 

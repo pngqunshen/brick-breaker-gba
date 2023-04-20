@@ -1,15 +1,25 @@
-// ensure angle a is between [-180, 180)
+/*
+  ensure angle a is between [-180, 180)
+  defined in collision.s
+*/
 extern int limit_angle(int a);
 
-// for defining platform collision at the top
-extern int platform_top_deflection(int x_ball, int x_platform, int heading_ball);
+/*
+  for defining platform collision at the top
+  defined in collision.s
+*/
+extern int platform_top_deflection(int heading_ball, int x_ball, int x_platform);
 
-// convert from rad to degree
+/*
+  convert from rad to degree
+*/
 int radToDeg(double a) {
     return (int)a/M_PI*180;
 }
 
-// convert from degree to radians
+/*
+  convert from degree to radians
+*/
 double degToRad(int a) {
     return a/180.0*M_PI;
 }
@@ -45,10 +55,16 @@ void fillSprites(void)
         drawSprite(0, i, SCREEN_WIDTH,SCREEN_HEIGHT);
 }
 
+/*
+  remove a sprite from the screen
+*/
 void removeFromScreen(int i) {
     drawSprite(0,i,SCREEN_WIDTH,SCREEN_HEIGHT);
 }
 
+/*
+  draw hearts to represent number of health left
+*/
 void drawHeart() {
     int i;
     for (i = 0; i < MAX_NUM_LIFE; i++) {
@@ -60,6 +76,9 @@ void drawHeart() {
     }
 }
 
+/*
+  draws a brick based on health left
+*/
 void drawBrick(int x, int y, int i) {
     switch (brick_health[i])
     {
@@ -75,7 +94,7 @@ void drawBrick(int x, int y, int i) {
         drawSprite(BRICK_GREEN, BRICKS_IND + i, x, y);
         break;
 
-    default:
+    default: // brick is destroyed, remove
         removeFromScreen(BRICKS_IND+i);
         bricks[i][0] = SCREEN_WIDTH;
         bricks[i][1] = SCREEN_HEIGHT;
@@ -83,14 +102,24 @@ void drawBrick(int x, int y, int i) {
     }
 }
 
+/*
+  handles generic collision heading change with vertical surface
+*/
 void vertCollision() {
     ball_heading = limit_angle(180 - ball_heading);
 }
 
+/*
+  handles generic collision heading change with horizontal surface
+*/
 void horiCollision() {
     ball_heading = limit_angle(-ball_heading);
 }
 
+/*
+  handles breaking of a brick upon collision
+  does not handle actual collision
+*/
 void brickBreak(int i) {
     brick_health[i] -= ball_dmg;
     int xb = bricks[i][0]-BRICK_LENGTH/2;
@@ -136,16 +165,20 @@ bool checkCollision(int x0, int y0)
         switch (game_state)
         {
         case GAME_STARTED: {
-            int new_heading = platform_top_deflection(xc, platform_x, ball_heading);
+            int new_heading = platform_top_deflection(ball_heading, xc, platform_x); // new heading
             if (new_heading == ball_heading) { // heading didn't change, fall past platform
-                game_state = GAME_ENDING;
+                game_state = GAME_ENDING; // change state
+            } else {
+                ball_heading = new_heading; // update heading
+                return true;
             }
             break;
         }
 
         case GAME_ENDING: {
-            // collide with left of platform
+            // left or right platform collision
             if (yc > BALL_PLATFORM_BOUND && yc <= (BALL_PLATFORM_BOUND+PLATFORM_HEIGHT)) {
+                // collide with left of platform
                 if (ball_right >= (platform_x-PLATFORM_WIDTH/2) && ball_right < platform_x) {
                     // if already bouncing away, do nothing, prevent glitch where ball gets stuck
                     if (ball_heading <= 90) {

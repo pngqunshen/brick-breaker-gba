@@ -1,5 +1,10 @@
+/*
+  handler for powerup A
+  increases the speed of the platform
+*/
 void powerupA_handler() {
-    if (powerupA_active) {
+    if (powerupA_active) { // powerup active
+        // powerup timer handling
         int ones = powerupA_timer % 10;
         int tens = (powerupA_timer / 10) % 10;
         drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_A_IND, 56, 0);
@@ -14,7 +19,8 @@ void powerupA_handler() {
             removeFromScreen(TIMER_POWERUP_A_IND+1);
             removeFromScreen(POWERUP_IND);
         }
-    } else if (powerupA_cooldown > 0) {
+    } else if (powerupA_cooldown > 0) { // under cooldown
+        // cooldown timer handling
         int ones = powerupA_cooldown % 10;
         int tens = (powerupA_cooldown / 10) % 10;
         drawSprite(NUMBER_ZERO + ones, TIMER_COOLDOWN_A_IND, 56, 0);
@@ -27,8 +33,13 @@ void powerupA_handler() {
     }
 }
 
+/*
+  handler for powerup B
+  destroys the bricks in one hit
+*/
 void powerupB_handler() {
-    if(powerupB_active) {
+    if(powerupB_active) { // powerup active
+        // powerup timer handling
         int ones = powerupB_timer % 10;
         int tens = (powerupB_timer / 10) % 10;
         drawSprite(NUMBER_ZERO + ones, TIMER_POWERUP_B_IND, 88, 0);
@@ -43,7 +54,8 @@ void powerupB_handler() {
             removeFromScreen(TIMER_POWERUP_B_IND);
             removeFromScreen(TIMER_POWERUP_B_IND+1);
         }
-    } else if (powerupB_cooldown > 0) {
+    } else if (powerupB_cooldown > 0) { // under cooldown
+        // cooldown timer handling
         int ones = powerupB_cooldown % 10;
         int tens = (powerupB_cooldown / 10) % 10;
         drawSprite(NUMBER_ZERO + ones, TIMER_COOLDOWN_B_IND, 88, 0);
