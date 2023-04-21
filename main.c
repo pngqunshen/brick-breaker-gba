@@ -96,7 +96,10 @@ void handler(void)
                     ball_x = BALL_START_X;
                     ball_y = BALL_START_Y;
                     ball_heading = BALL_START_HEAD;
+                    platform_x = 120;
                     drawSprite(BALL, BALL_IND, ball_x, ball_y);
+                    drawSprite(PLATFORM_LEFT, PLATFORM_LEFT_IND, platform_x-16, 144);
+                    drawSprite(PLATFORM_RIGHT, PLATFORM_RIGHT_IND, platform_x, 144);
                     start_timer = GAME_START_COUNTDOWN;
                     game_state = GAME_STARTING;
                 } else {
